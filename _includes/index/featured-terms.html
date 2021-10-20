@@ -1,0 +1,53 @@
+{% comment %} 
+
+    Featured Terms button-links.
+    This include creates a card with btn links to the Browse page from a set of automatically generated or manually selected terms. Either use the "field" option to auto generate *or* the "featured" option to manually create list of terms.
+
+    E.G. --> {% include index/featured-terms.html field="subject" title="Top Subjects" btn-color="outline-info" max=8 %}
+
+    E.G. --> {% include index/featured-terms.html featured="Example term; Another; One more" title="Topic Areas" btn-color="success" %}
+
+    Options:
+
+    - "field" - a field from your metadata that will be used to auto generate top terms (required to auto generate)
+    - "featured" - a manually created list of featured terms, separated by ; semicolon (required if not auto generating from a field)
+    - "title" - card title text inside card content area (optional)
+    - "header" = card header text in bar above card content (optional)
+    - "max" - max number of terms to display if auto generating (optional, default 5)
+    - "btn-color" - a bootstrap color class to theme the buttons. Can be any bootstrap template color (e.g. info, success) or outline (e.g. outline-info, outline-success), including colors created in config-theme-colors. (optional, default "info")
+
+{%- endcomment -%}
+
+{%- if include.featured -%}
+{% assign topTerms = include.featured | split: ";" %}
+{%- else -%}
+
+{% comment %} 
+    Use termsField and termsMax to customize feature 
+{% endcomment %}
+{% assign termsField = include.field | default: "subject" %}
+{% assign termsMax = include.max | default: 5 %}
+
+{% comment %} 
+    Liquid below cleans and counts unique terms 
+{% endcomment %}
+{% assign rawTerms = site.data[site.metadata] | map: termsField | join: ";" | split: ";" %}
+{% capture terms %}{% for t in rawTerms %}{% if t != "" and t != " " %}{{ t | strip | downcase }};{% endif %}{% endfor %}{% endcapture %}
+{% assign terms = terms | split: ";" %}
+{% assign uniqueTerms = terms | uniq | sort %}
+{% capture termsCount %}{% for unique in uniqueTerms %}{% assign count = terms | where_exp: 'item', 'item == unique' | size %}{{ count | prepend: '0000' | slice: -4, 4 }}||{{ unique | capitalize }}{% unless forloop.last %};{% endunless %}{% endfor %}{% endcapture %}
+{% assign termsCount = termsCount | split: ";" | sort | reverse %}
+{% capture topTerms %}
+{% for i in termsCount limit: termsMax %}{{ i | split: "||" | last }};{% endfor %}{% endcapture %}
+{% assign topTerms = topTerms | split: ";" %}
+{%- endif -%}
+<div class="card mb-3">
+    {% if include.header %}<h5 class="card-header">{{ include.header }}</h5>{% endif %}
+    <div class="card-body">
+        {% if include.title %}<h5 class="card-title">{{ include.title }}</h5>{% endif %}
+        <p class="card-text">
+            {% for s in topTerms %}
+            <a class="btn btn-sm btn-{{ include.btn-color | default: 'info' }} m-1" href="{{ s | strip | url_param_escape | prepend: '/browse.html#' | relative_url }}">{{ s | strip }}</a>{% endfor %}
+        </p>
+    </div>
+</div>
