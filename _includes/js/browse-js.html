@@ -13,7 +13,7 @@ function makeCard(obj) {
     if(obj.youtube) {
       imgSrc = 'https://img.youtube.com/vi/' + obj.youtube + '/hqdefault.jpg';
     } else if (obj.format.includes("image")) {
-      imgSrc = obj.filename;
+      if(obj.filename.includes("/")) { imgSrc = obj.filename; } else { imgSrc = "{{ '/objects/' | relative_url }}" + obj.filename; }
     } else if (obj.format.includes("audio")) {
       thumbSrc = '{{ "/assets/img/audio.svg" | relative_url }}';
     } else if (obj.format.includes("video")) {
