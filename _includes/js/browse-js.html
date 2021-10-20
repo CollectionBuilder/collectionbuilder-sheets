@@ -1,7 +1,9 @@
 {%- assign items = site.data[site.metadata] | where_exp: 'item','item.objectid' -%}
 {%- assign fields = site.data.config-browse -%}
+<script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script>
 
+/* function to make each item card on page */
 function makeCard(obj) {
     // find item link
     var itemHref = "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.id;
@@ -87,14 +89,7 @@ function makeCard(obj) {
     return array;
   }
 
-  /* add items */
-  var items = [
-    {% for i in items %}
-    { "title":{{ i.title | strip | jsonify }}, "format":{% if i.format %}{{ i.format | jsonify }}{% else %}""{% endif %}, {% for f in fields %}{% if i[f.field] %}{{ f.field | jsonify }}:{{ i[f.field] | strip | jsonify }},{% endif %}{% endfor %} {% if i.youtubeid %} "youtube": {{ i.youtubeid | jsonify }}, {% endif %}{% if  i.filename contains '/' %}"filename": "{{ i.filename }}" {% else %}"filename":"{{ '/objects/' | relative_url | append: i.filename }}"{% endif %}, "id":{{ i.objectid | jsonify }} }{% unless forloop.last %},{% endunless %}{% endfor %}
-  ];
-  /* randomize items once at page load */
-  shuffle(items);
-
+  /* function to filter items to be displayed on browse */
   function filterItems(arr,q) {
     // dont filter if no q 
     if (q=="") { 
@@ -142,16 +137,34 @@ function makeCard(obj) {
     $("#loading").hide();
   };
 
+  /* variables needed on the page */
+  var items = [];
   var query = "";
-  /* filter if hash in initial URL */
-  if(window.location.hash) {
-    query = decodeURIComponent(location.hash.substr(1));
-    $('#quickSearch').val(query);
-    filterItems(items,query);
-  } else {
-    query = "";
-    filterItems(items,query);
+
+  /* function to init browse after loading csv from Sheets */ 
+  function itemsInit(results) {
+    items = results.data;
+    /* randomize items once at page load */
+    shuffle(items);
+    /* filter if hash in initial URL */
+    if(window.location.hash) {
+      query = decodeURIComponent(location.hash.substr(1));
+      $('#quickSearch').val(query);
+      filterItems(items,query);
+    } else {
+      query = "";
+      filterItems(items,query);
+    }
   }
+  
+  /* use papaparse to get metadata from google sheets, then init page */
+  Papa.parse("{{ site.metadata-csv-link }}", {
+    download: true,
+    header: true,
+    complete: (results) => itemsInit(results)
+  });
+  
+
   /* add hash if search button clicked */ 
   $('#goButton').click( function() {
     window.location.hash = encodeURIComponent($('#quickSearch').val());
@@ -205,4 +218,5 @@ $(".browse-sort-item").click(function (event) {
         filterItems(items, query);
     }
 }); 
+
 </script>
