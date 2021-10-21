@@ -1,11 +1,32 @@
 {% assign fcount = site.data.config-table | size %}
+{%- assign fields = site.data.config-table | map: 'field' -%}
+<script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script type="text/javascript" language="javascript" src="{{ '/assets/lib/datatables/datatables.min.js' | relative_url }}"></script>
 <script>
-/* use jquery to initialize DataTables and load collection data */
-(function(){
+/* use papaparse to get metadata from google sheets, then init page */
+Papa.parse("{{ site.metadata-csv-link }}", {
+  download: true,
+  header: true,
+  complete: (results) => tableInit(results)
+});
+
+function tableInit(results) {
+    // set up data
+    var items = results.data;
+    var table_data = [];
+    // get configured fields
+    for (var i = 0; i < items.length; i++) {
+        var row = [];
+        {% for f in fields %}
+        if(items[i][{{ f | jsonify }}]) { row.push(items[i][{{ f | jsonify }}]); } else { row.push("n/a"); }
+        {% endfor %}
+        row.push("{{ '/item.html?id=' | relative_url }}" + items[i].objectid );
+        table_data.push(row);
+    }
+    // init datatables 
     $('#item-table').DataTable( {
         // use DataTables ajax load to 
-        ajax: { url: '{{ "/assets/js/metadata.min.json" | relative_url }}', dataSrc: 'objects' },
+        data: table_data,
         // defer render to speed up large sets
         "deferRender": true,
         // enable pagination 
@@ -27,5 +48,6 @@
         // sort based on the second column
         order: [[ 1, "asc" ]]
     });
-})();
+}
+
 </script>
