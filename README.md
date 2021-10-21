@@ -1,3 +1,8 @@
+# cb-gh-parse-test
+
+Demo using [papa parse](https://www.papaparse.com/) + google sheets rather than local data. 
+See [docs/metadata-link.md](docs/metadata-link.md).
+
 # collectionbuilder-gh
 
 A project to generate a free and simple digital collection site using [GitHub Pages](https://pages.github.com/) given:
