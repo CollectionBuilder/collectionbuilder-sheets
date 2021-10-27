@@ -14,7 +14,7 @@ if (sessionStorage.getItem("cb_items_store")) {
 
 } else { 
   /* use papaparse to get metadata from google sheets, then init page */
-  Papa.parse("{{ site.metadata-csv-link }}", {
+  Papa.parse("{{ site.metadata-csv | relative_url }}", {
     download: true,
     header: true,
     complete: (results) => cb_items_init(results)
