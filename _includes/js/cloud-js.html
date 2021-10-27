@@ -2,22 +2,13 @@
 <script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script>
 
-/* use papaparse to get metadata from google sheets, then init page */
-Papa.parse("{{ site.metadata-csv-link }}", {
-  download: true,
-  header: true,
-  complete: (results) => cloudInit(results)
-});
-
 /* function to create cloud from full metadata */
-function cloudInit(results) {
-    var metadata_items = [];
+function pageInit(items) {
     var raw_terms = [];
-    metadata_items = results.data;
     // get cloud fields out
-    for (var i = 0; i < metadata_items.length; i++) {
+    for (var i = 0; i < items.length; i++) {
         {% for c in cloud-fields %}
-        if(metadata_items[i][{{ c | jsonify }}]) { raw_terms.push(metadata_items[i][{{ c | jsonify }}]); } 
+        if(items[i][{{ c | jsonify }}]) { raw_terms.push(items[i][{{ c | jsonify }}]); } 
         {% endfor %}
     }
     
@@ -49,5 +40,7 @@ function cloudInit(results) {
     }
     cloud.innerHTML = items;
 };
-    
+
+{% include js/cb-items.js %}
+
 </script>
