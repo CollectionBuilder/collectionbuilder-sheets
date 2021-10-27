@@ -1,44 +1,64 @@
 {%- assign cloud-fields = include.fields | split: ";" -%}
 <script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script>
+{% if include.shuffle == true %}
+/* Fisher-Yates shuffle https://bost.ocks.org/mike/shuffle/ */
+function shuffle(array) {
+    var m = array.length, t, i;
+    while (m) {
+    i = Math.floor(Math.random() * m--);
+    t = array[m];
+    array[m] = array[i];
+    array[i] = t;
+    }
+    return array;
+}
+{% endif %}
+/* function to create cloud */ 
+function makeGrid(terms) {
+    // get cloud div
+    var cloud = document.getElementById("{{ cloud_id }}");
+    var i, size;
+    var cloud_items = "";
+    /* calculate max size */
+    var counts = terms.map(function(obj){ return obj[1]; });
+    var countMax = counts.reduce(function(a, b) { return Math.max(a, b); });
+    {% if include.shuffle == true %}shuffle(terms);{% endif %}
+    // create each term link
+    for (i = 0; i < terms.length; i++) {
+        size = Math.round(terms[i][1] * 9 / countMax + 1); 
+        cloud_items += '<a class="btn btn-{{ include.button | default: "outline-info" }} m-2 tagcloud' + size + '" href="{{ "/browse.html" | relative_url }}#' + encodeURIComponent(terms[i][0]) + '" >' + terms[i][0] + '</a>';
+    }
+    cloud.innerHTML = cloud_items;
+}
 
-/* function to create cloud from full metadata */
+/* create cloud from full metadata */
 function pageInit(items) {
     var raw_terms = [];
-    // get cloud fields out
+    // get cloud fields from metadata
     for (var i = 0; i < items.length; i++) {
         {% for c in cloud-fields %}
         if(items[i][{{ c | jsonify }}]) { raw_terms.push(items[i][{{ c | jsonify }}]); } 
         {% endfor %}
     }
-    
     // split multivalued fields and clean up extra white space
     const re = /\s*;+\s*/;
-    var clean = raw_terms.join(";").toLowerCase().split(re);
-
-    // count unique values
-    var terms = {};
-    for (var i = 0; i < clean.length; i++) {
-        terms[clean[i]] = 1 + (terms[clean[i]] || 0);
+    var clean_terms = raw_terms.join(";").toLowerCase().split(re);
+    // find unique terms
+    var unique_terms = clean_terms.filter(function(value, index, self) { return self.indexOf(value) === index; });
+    // count unique values and filter based on termsMin
+    var terms = [];
+    for (var i = 0; i < unique_terms.length; i++) {
+        var count = clean_terms.filter(function(t) { return t == unique_terms[i] }).length;
+        if (count >= {{ include.min | default: 1 }}) {
+            terms.push([unique_terms[i],count]);
+        }
     }
     {% if include.stopwords %}/* apply stopwords */
     var stopWords = {{ include.stopwords | downcase | split: ';' | jsonify }};
-    //terms = terms.filter(function(a) { return stopWords.indexOf(a[0]) < 0;});{% endif %}
-    /* calculate max size */
-    var counts = Object.keys(terms).map(function(key){return terms[key]});
-    var countMax = counts.reduce(function(a, b) { return Math.max(a, b); });
-    // make cloud
-    var cloud = document.getElementById("{{ cloud_id }}");
-    function mapSize(x) { return Math.round(x * 9 / countMax + 1); }
-    /* create cloud */
-    var i, size;
-    var a = Object.keys(terms);
-    var items = "";
-    for (i = 0; i < a.length; i++) {
-        size = mapSize(terms[a[i]]);
-        items += '<div class="btn btn-outline-primary m-2 tagcloud' + size + '">' + a[i] + '</div>';
-    }
-    cloud.innerHTML = items;
+    terms = terms.filter(function(a) { return stopWords.indexOf(a[0]) < 0;});{% endif %}
+    // create cloud
+    makeGrid(terms);
 };
 
 {% include js/cb-items.js %}
