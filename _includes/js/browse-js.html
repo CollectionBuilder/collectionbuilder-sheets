@@ -1,4 +1,3 @@
-{%- assign items = site.data[site.metadata] | where_exp: 'item','item.objectid' -%}
 {%- assign fields = site.data.config-browse -%}
 <script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script>
@@ -96,23 +95,7 @@ function makeCard(obj) {
       var filteredItems = arr; 
     } else {
       q = q.trim().toUpperCase(); 
-      // 3 filter options, filter, grep, loop...
-      // js filter
-      /*
-      var filteredItems = arr.filter(function (obj) { return Object.values(obj).join(" ").toUpperCase().includes(q);}); */
-      // jquery grep
-      /*
-      var filteredItems = jQuery.grep(arr, function(obj) { return Object.values(obj).join(" ").toUpperCase().includes(q);}); */
-      // (/keyword/i).test(source)
-      // js loop
-      /*
-      var filteredItems = [];
-      for (var i = 0, len = arr.length; i < len; i++) {
-        if(Object.values(arr[i]).join(" ").toUpperCase().includes(q)){
-          filteredItems.push(arr[i]);
-        }
-      }*/
-      // for compatible indexOf loop seems fastest
+      // filter items
       var filteredItems = [];
       for (var i = 0, len = arr.length; i < len; i++) {
         var val = "";
@@ -123,7 +106,7 @@ function makeCard(obj) {
       }
     }
     // add number 
-    $("#numberOf").html(filteredItems.length + " of {{ items | size }} items");
+    $("#numberOf").html(filteredItems.length + " of " + arr.length + " items");
     
     // add stuff, make cards first in giant var, then add all at once to speed things up
     var cards = "";
@@ -137,13 +120,8 @@ function makeCard(obj) {
     $("#loading").hide();
   };
 
-  /* variables needed on the page */
-  var items = [];
-  var query = "";
-
-  /* function to init browse after loading csv from Sheets */ 
-  function itemsInit(results) {
-    items = results.data;
+  /* function to init browse after loading items */ 
+  function pageInit(items) {
     /* randomize items once at page load */
     shuffle(items);
     /* filter if hash in initial URL */
@@ -157,14 +135,29 @@ function makeCard(obj) {
     }
   }
   
-  /* use papaparse to get metadata from google sheets, then init page */
-  Papa.parse("{{ site.metadata-csv-link }}", {
-    download: true,
-    header: true,
-    complete: (results) => itemsInit(results)
-  });
-  
+  /* Load items from Sheets, store in sessionStorage, or load from sessionStorage */
+  var cb_items = [];
+  var query = "";
+  // function to process items from Sheets and store
+  function cb_items_init(results) {
+    cb_items = results.data;
+    sessionStorage.setItem("cb_items_store", JSON.stringify(cb_items));
+    pageInit(cb_items);
+  }
+  // check for sessionStored items
+  if (sessionStorage.getItem("cb_items_store")) {
+    cb_items = JSON.parse(sessionStorage.getItem("cb_items_store"));
+    pageInit(cb_items);
 
+  } else { 
+    /* use papaparse to get metadata from google sheets, then init page */
+    Papa.parse("{{ site.metadata-csv-link }}", {
+      download: true,
+      header: true,
+      complete: (results) => cb_items_init(results)
+    });
+  }
+  
   /* add hash if search button clicked */ 
   $('#goButton').click( function() {
     window.location.hash = encodeURIComponent($('#quickSearch').val());
@@ -183,7 +176,7 @@ function makeCard(obj) {
     query = decodeURIComponent(location.hash.substr(1));
     $('#quickSearch').val(query);
     // filter
-    filterItems(items,query);
+    filterItems(cb_items,query);
   });
 
 
@@ -210,12 +203,12 @@ $(".browse-sort-item").click(function (event) {
     $(this).addClass('active');
     $('#sortfilter').text(dname);
     if (field != 'random') {
-        sorting(items, field);
-        filterItems(items, query);
+        sorting(cb_items, field);
+        filterItems(cb_items, query);
     }
     else {
-        shuffle(items);
-        filterItems(items, query);
+        shuffle(cb_items);
+        filterItems(cb_items, query);
     }
 }); 
 
