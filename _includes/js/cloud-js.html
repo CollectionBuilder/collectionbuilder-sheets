@@ -1,4 +1,5 @@
 {%- assign cloud-fields = include.fields | split: ";" -%}
+<script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script>
 {% if include.shuffle == true %}
 /* Fisher-Yates shuffle https://bost.ocks.org/mike/shuffle/ */
