@@ -20,11 +20,11 @@ function lunr_search () {
             {% assign display = fields | where: 'display','true' %}
             {% for d in display %}
             {% if forloop.first %}
-            '<p class="h4"><a href="{{ site.baseurl }}/item.html?id=' + store[ref].objectid + '">' + store[ref][{{ fields[0].field | jsonify }}]  + '</a></p>' +
+            '<p class="h4"><a href="{{ site.baseurl }}/item.html?id=' + cb_items[ref].objectid + '">' + cb_items[ref][{{ fields[0].field | jsonify }}]  + '</a></p>' +
             '<p class="ml-3">';
               {% else %}
-              if(store[ref][{{ d.field | jsonify }}]) {
-                searchitem += store[ref][{{ d.field | jsonify }}] + '<br> '; }
+              if(cb_items[ref][{{ d.field | jsonify }}]) {
+                searchitem += cb_items[ref][{{ d.field | jsonify }}] + '<br> '; }
               {% endif %}{% endfor %}
               searchitem += '</p></td>' +
       '</tr>';
@@ -33,7 +33,7 @@ function lunr_search () {
 };
 
 /* function to set up lunr store */
-function createIndex(store) {
+function createIndex(cb_items) {
   /* initialize lunr */
   idx = lunr(function () {
     /* add index fields from config */
@@ -42,10 +42,10 @@ function createIndex(store) {
     this.field({{ f.field | jsonify }})
     {% endfor %}
 
-    for (var item in store) {
+    for (var item in cb_items) {
       this.add({
         {% for f in index_fields %}
-        {{ f.field | jsonify }}: store[item][{{ f.field | jsonify }}],
+        {{ f.field | jsonify }}: cb_items[item][{{ f.field | jsonify }}],
         {% endfor %}
         id: item
       })
@@ -56,16 +56,15 @@ function createIndex(store) {
 
 
 /* page init function */
-function searchInit(results) {
+function pageInit(cb_items) {
   // set up item store
-  store = results.data;
-  for (var item in store) {
+  for (var item in cb_items) {
     {% for f in index_fields %}
-    if(store[item][{{ f.field | jsonify }}] == '') { store[item][{{ f.field | jsonify }}] = "none"; }
+    if(cb_items[item][{{ f.field | jsonify }}] == '') { cb_items[item][{{ f.field | jsonify }}] = "none"; }
     {% endfor %}
   }
   // set up lunr store
-  createIndex(store);
+  createIndex(cb_items);
   // get query from url if there
   if (window.location.search) {
     var queryString = decodeURIComponent(window.location.search.substring(1).split("=")[1]);
@@ -77,12 +76,7 @@ function searchInit(results) {
 
 /* varibles for page */
 var idx;
-var store = [];
-/* use papaparse to get metadata from google sheets, then init page */
-Papa.parse("{{ site.metadata-csv-link }}", {
-  download: true,
-  header: true,
-  complete: (results) => searchInit(results)
-});
+
+{% include js/cb-items.js %}
 
 </script>
