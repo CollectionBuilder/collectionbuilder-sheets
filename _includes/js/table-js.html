@@ -3,16 +3,9 @@
 <script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script type="text/javascript" language="javascript" src="{{ '/assets/lib/datatables/datatables.min.js' | relative_url }}"></script>
 <script>
-/* use papaparse to get metadata from google sheets, then init page */
-Papa.parse("{{ site.metadata-csv-link }}", {
-  download: true,
-  header: true,
-  complete: (results) => tableInit(results)
-});
 
-function tableInit(results) {
+function pageInit(items) {
     // set up data
-    var items = results.data;
     var table_data = [];
     // get configured fields
     for (var i = 0; i < items.length; i++) {
@@ -49,5 +42,7 @@ function tableInit(results) {
         order: [[ 1, "asc" ]]
     });
 }
+
+{% include js/cb-items.js %}
 
 </script>
