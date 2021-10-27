@@ -1,6 +1,6 @@
 # CollectionBuilder-Sheets
 
-CollectionBuilder-Sheets is an experimental project template designed to load collection data directly from Google Sheets. 
+CollectionBuilder-Sheets is an experimental project template designed to load collection metadata directly from Google Sheets or other CSV. 
 This enables live collaboration to prototype collections with minimal set up.
 
 To learn more check [docs/sheets-metadata.md](docs/sheets-metadata.md).

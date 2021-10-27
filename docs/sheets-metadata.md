@@ -9,6 +9,11 @@ You have three main options for your metadata CSV:
 - a CSV available on the web
 - a CSV directly in your project 
 
+As each page in your digital collection loads, javascript downloads the CSV from the link you configured, parses it using the [Papa Parse](https://www.papaparse.com/) library, and then displays the results in the visualization.
+Once the CSV is downloaded, the javascript stores it in the browser's session storage so that the data can be re-used with out downloading again as you navigate the collection pages. 
+
+If you want a fresh reload of the data (i.e. you made changes in Sheets and want to see the results), simply open the page in a new window!
+
 ## Set up Google Sheets
 
 Set up a Google Sheet with metadata following the template.
@@ -44,10 +49,3 @@ Copy your CSV file into the "assets" folder then reference it in the "_config.ym
 For example:
 
 `metadata-csv: /assets/demo-metadata.csv`
-
-## How it Works
-
-As each page in your digital collection loads, javascript downloads the CSV from the link you configured, parses it using the [Papa Parse](https://www.papaparse.com/) library, and then displays the results in the visualization.
-Once the CSV is downloaded, the javascript stores it in the browser's session storage so that the data can be re-used with out downloading again as you navigate the collection pages. 
-
-If you want to force the pages to freshly reload the data (i.e. you made changes in Sheets and want to see the results), open the page in a new window. 
