@@ -23,7 +23,7 @@ function pageInit(items) {
         }
     }
     // find unique years 
-    unique_years = clean_years.filter(function(value, index, self) { return self.indexOf(value) === index; }).sort();
+    unique_years = clean_years.filter(function(value, index, self) { return self.indexOf(value) === index; }).sort((a, b) => a - b);
 
     // figure out navYears 
     {%- if site.data.theme.year-navigation -%}
