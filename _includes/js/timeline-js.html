@@ -1,11 +1,49 @@
 <script>
-(function(){
-    // init bootstrap tooltips
-    $('[data-toggle="tooltip"]').tooltip()
-    // highlight year if hash
-    if(window.location.hash) {
-        var hashfilter = decodeURIComponent(location.hash.substr(1));
-        $("tr#" + hashfilter).addClass("bg-info");
+
+// init bootstrap tooltips
+$('[data-toggle="tooltip"]').tooltip()
+// highlight year if hash
+if(window.location.hash) {
+    var hashfilter = decodeURIComponent(location.hash.substr(1));
+    $("tr#" + hashfilter).addClass("bg-info");
+}
+
+function pageInit(items) {
+    // get dates from metadata and clean to years
+    clean_years = [];
+    for (var i = 0; i < items.length; i++) {
+        if(items[i].date) { 
+            if(items[i].date.includes("-")) {
+                clean_years.push(items[i].date.trim().split("-")[0]);
+            } else if (items[i].date.includes("/")) {
+                clean_years.push(items[i].date.trim().split("/").reverse()[0]);
+            } else {
+                clean_years.push(items[i].date.trim());
+            }
+        }
     }
-})();
+    // find unique years 
+    unique_years = clean_years.filter(function(value, index, self) { return self.indexOf(value) === index; }).sort();
+
+    // figure out navYears 
+    {%- if site.data.theme.year-navigation -%}
+    var navYears = {{ site.data.theme.year-navigation | split: ":" | jsonify }};
+    {%- else -%}
+
+    {% endif %}
+    // add navYears to page
+
+    // iterate over unique years 
+    for (var i = 0; i < unique_years.length; i++) {
+        // find related items by date
+
+        // add items to timeline
+
+    }
+
+
+}
+
+{% include js/cb-items.js %}
+
 </script>
