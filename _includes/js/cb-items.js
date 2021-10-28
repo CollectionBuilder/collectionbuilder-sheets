@@ -1,6 +1,6 @@
 /* Load items from Sheets, store in sessionStorage, or load from sessionStorage */
 var cb_items = [];
-var query = "";
+
 // function to process items from Sheets and store
 function cb_items_init(results) {
   cb_items = results.data;

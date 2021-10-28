@@ -74,91 +74,91 @@ function makeCard(obj) {
     card += '</div></div></div>';
     // send back big string
     return card;
-  }
+}
 
-  /* Fisher-Yates shuffle https://bost.ocks.org/mike/shuffle/ */
-  function shuffle(array) {
-    var m = array.length, t, i;
-    while (m) {
-    i = Math.floor(Math.random() * m--);
-    t = array[m];
-    array[m] = array[i];
-    array[i] = t;
-    }
-    return array;
+/* Fisher-Yates shuffle https://bost.ocks.org/mike/shuffle/ */
+function shuffle(array) {
+  var m = array.length, t, i;
+  while (m) {
+  i = Math.floor(Math.random() * m--);
+  t = array[m];
+  array[m] = array[i];
+  array[i] = t;
   }
+  return array;
+}
 
-  /* function to filter items to be displayed on browse */
-  function filterItems(arr,q) {
-    // dont filter if no q 
-    if (q=="") { 
-      var filteredItems = arr; 
-    } else {
-      q = q.trim().toUpperCase(); 
-      // filter items
-      var filteredItems = [];
-      for (var i = 0, len = arr.length; i < len; i++) {
-        var val = "";
-        for (var k in arr[i]) { val += arr[i][k] + " "; }
-        if(val.toUpperCase().indexOf(q) != -1){
-          filteredItems.push(arr[i]);
-        }
+/* function to filter items to be displayed on browse */
+function filterItems(arr,q) {
+  // dont filter if no q 
+  if (q=="") { 
+    var filteredItems = arr; 
+  } else {
+    q = q.trim().toUpperCase(); 
+    // filter items
+    var filteredItems = [];
+    for (var i = 0, len = arr.length; i < len; i++) {
+      var val = "";
+      for (var k in arr[i]) { val += arr[i][k] + " "; }
+      if(val.toUpperCase().indexOf(q) != -1){
+        filteredItems.push(arr[i]);
       }
     }
-    // add number 
-    $("#numberOf").html(filteredItems.length + " of " + arr.length + " items");
-    
-    // add stuff, make cards first in giant var, then add all at once to speed things up
-    var cards = "";
-    for (var i = 0, len = filteredItems.length; i < len; i++) {
-      cards += makeCard(filteredItems[i]);
-    }
-    $("#browseItems").html(cards);
-
-    // finish
-    $("#goButton").focus();
-    $("#loading").hide();
-  };
-
-  /* function to init browse after loading items */ 
-  function pageInit(items) {
-    /* randomize items once at page load */
-    shuffle(items);
-    /* filter if hash in initial URL */
-    if(window.location.hash) {
-      query = decodeURIComponent(location.hash.substr(1));
-      $('#quickSearch').val(query);
-      filterItems(items,query);
-    } else {
-      query = "";
-      filterItems(items,query);
-    }
   }
+  // add number 
+  $("#numberOf").html(filteredItems.length + " of " + arr.length + " items");
   
-  {% include js/cb-items.js %}
-  
-  /* add hash if search button clicked */ 
-  $('#goButton').click( function() {
-    window.location.hash = encodeURIComponent($('#quickSearch').val());
-  });
-  /* add hash if if enter is pressed */
-  $('#quickSearch').keypress(function(e){
-    if(e.which == 13){
-        window.location.hash = encodeURIComponent($('#quickSearch').val());
-      }
-  });
-  /* filter if hash changes */ 
-  $(window).on("hashchange", function() {
-    // show spinner
-    $("#loading").show();
-    // read hash
+  // add stuff, make cards first in giant var, then add all at once to speed things up
+  var cards = "";
+  for (var i = 0, len = filteredItems.length; i < len; i++) {
+    cards += makeCard(filteredItems[i]);
+  }
+  $("#browseItems").html(cards);
+
+  // finish
+  $("#goButton").focus();
+  $("#loading").hide();
+};
+
+/* function to init browse after loading items */ 
+function pageInit(items) {
+  /* randomize items once at page load */
+  shuffle(items);
+  /* filter if hash in initial URL */
+  if(window.location.hash) {
     query = decodeURIComponent(location.hash.substr(1));
     $('#quickSearch').val(query);
-    // filter
-    filterItems(cb_items,query);
-  });
+    filterItems(items,query);
+  } else {
+    query = "";
+    filterItems(items,query);
+  }
+}
 
+var query = "";
 
+{% include js/cb-items.js %}
+  
+/* add hash if search button clicked */ 
+$('#goButton').click( function() {
+  window.location.hash = encodeURIComponent($('#quickSearch').val());
+});
+/* add hash if if enter is pressed */
+$('#quickSearch').keypress(function(e){
+  if(e.which == 13){
+      window.location.hash = encodeURIComponent($('#quickSearch').val());
+    }
+});
+/* filter if hash changes */ 
+$(window).on("hashchange", function() {
+  // show spinner
+  $("#loading").show();
+  // read hash
+  query = decodeURIComponent(location.hash.substr(1));
+  $('#quickSearch').val(query);
+  // filter
+  filterItems(cb_items,query);
+});
 
 /* item array sorting function */
 function sorting(json_object, key_to_sort_by) {
