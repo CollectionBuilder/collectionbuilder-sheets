@@ -32,10 +32,13 @@ author: CollectionBuilder
 ##########
 # COLLECTION SETTINGS
 #
-# Set the metadata for your collection (the name of the csv file in your _data directory that describes the objects in your collection) 
-# Use the filename of your CSV **without** the ".csv" extension! E.g. _data/demo-metadata.csv --> "demo-metadata"
+# Set the metadata for your collection 
+# This will be the full URL to your CSV file or relative path + filename of CSV in this repository 
+# e.g. relative path "/assets/demo-metadata.csv"
+# e.g. published google sheet "https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?gid=0&single=true&output=csv"
 metadata-csv: /assets/demo-metadata.csv
-# https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?gid=0&single=true&output=csv
+# old metadata value, temporarily required to avoid issues with parts of template that aren't updated!
+metadata: demo-metadata
 
 ##########
 # GOOGLE SERVICES [optional!]
