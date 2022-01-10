@@ -1,11 +1,38 @@
 <script>
 
-// init bootstrap tooltips
-$('[data-toggle="tooltip"]').tooltip()
-// highlight year if hash
-if(window.location.hash) {
-    var hashfilter = decodeURIComponent(location.hash.substr(1));
-    $("tr#" + hashfilter).addClass("bg-info");
+function makeTimelineRow(year) {
+    var yearRow = '<tr id="'+ year +'"><th><h3>' + year +'</h3></th><td><div class="row"></div></td></tr>';
+    return yearRow;
+}
+
+function makeCard(obj) {
+    // find images and link
+    // find item link
+    var itemHref = "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.objectid;
+    // find images
+    var thumbSrc;
+    // add images or thumb for objects based on format
+    if(obj.youtube) {
+        thumbSrc = 'https://img.youtube.com/vi/' + obj.youtube + '/hqdefault.jpg';
+    } else if (obj.format.includes("image")) {
+        if(obj.filename.includes("/")) { thumbSrc = obj.filename; } else { thumbSrc = "{{ '/objects/' | relative_url }}" + obj.filename; }
+    } else if (obj.format.includes("audio")) {
+        thumbSrc = '{{ "/assets/img/audio.svg" | relative_url }}';
+    } else if (obj.format.includes("video")) {
+        thumbSrc = '{{ "/assets/img/video.svg" | relative_url }}';  
+    } else if (obj.format.includes("pdf")) {
+        thumbSrc = '{{ "/assets/img/pdf.svg" | relative_url }}';
+    } else {
+        thumbSrc = '{{ "/assets/img/file.svg" | relative_url }}';
+    }  
+    // start card
+    if (obj.format.includes("image")){
+        var card = '<div class="col-lg-4 col-md-6"><a class="d-inline-block m-1" href="' + itemHref + '" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="' + obj.title + '"> <img class="lazyload img-thumbnail" src="' + thumbSrc + '" alt="Image of ' + obj.title + '" ></a></div>';
+    }
+    else {
+        var card = '<div class="col-lg-4 col-md-6"><div class="card"><div class="card-body text-center"><div class="h5 text-dark">' + obj.title + '</div><a class="stretched-link" href="' + itemHref +'"><img class="lazyload img-thumbnail w-50" src="" data-src="' + thumbSrc + '" alt="Image of ' + obj.title + '"></a></div></div></div>';
+    }
+    return card;
 }
 
 function pageInit(items) {
@@ -25,23 +52,58 @@ function pageInit(items) {
     // find unique years 
     unique_years = clean_years.filter(function(value, index, self) { return self.indexOf(value) === index; }).sort((a, b) => a - b);
 
+    $("#firstYear").html(unique_years[0]);
+    $("#firstYear").attr("href", "#" + unique_years[0]);
+    $("#lastYear").html(unique_years[unique_years.length - 1]);
+    $("#lastYear").attr("href", "#" + unique_years[unique_years.length - 1]);
+
     // figure out navYears 
+    var dropYears = "";
     {%- if site.data.theme.year-navigation -%}
-    var navYears = {{ site.data.theme.year-navigation | split: ":" | jsonify }};
+    var navYears = {{ site.data.theme.year-navigation | split: ";" | jsonify }};
     {%- else -%}
-
+    const everyNth = (arr, nth) => arr.filter((e, i) => i % nth === nth - 1);
+    if (unique_years.length < 20){
+        var navYears = everyNth(unique_years, 2);
+    }
+    else {
+        var navYears = everyNth(unique_years, 5);
+    }
     {% endif %}
+    for (var i = 0; i < navYears.length; i++){
+        dropYears += '<a class="dropdown-item" href="#' + navYears[i] + '">' + navYears[i] + '</a>';
+    }
+    $("#navDropYears").append(dropYears);
+    
     // add navYears to page
-
     // iterate over unique years 
     for (var i = 0; i < unique_years.length; i++) {
+        var years = "";
+        years = makeTimelineRow(unique_years[i]);
+        $("#timeline").append(years);
         // find related items by date
-
-        // add items to timeline
-
+        for (var item = 0; item < items.length; item++) {
+            var object = items[item];
+            if (object.date.includes("/")) {
+                var objYear = object.date.slice(object.date.length - 4);
+            }
+            else {
+                var objYear = object.date.slice(0,4);
+            }
+            var cards = "";
+            if (objYear == unique_years[i] ){
+            cards += makeCard(object);
+            }
+            $("#" + unique_years[i] + " td .row").append(cards);
+        }
     }
-
-
+    // init bootstrap tooltips
+    $('[data-toggle="tooltip"]').tooltip()
+    // highlight year if hash
+    if(window.location.hash) {
+        var hashfilter = decodeURIComponent(location.hash.substr(1));
+        $("tr#" + hashfilter).addClass("bg-info");
+    }
 }
 
 {% include js/cb-items.js %}

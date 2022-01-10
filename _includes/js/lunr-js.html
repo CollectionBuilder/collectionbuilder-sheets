@@ -1,6 +1,5 @@
 {%- assign fields = site.data.config-search -%}
 {%- assign index_fields = fields | where: 'index','true' -%}
-<script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script src="{{ '/assets/lib/lunr.min.js' | relative_url }}"></script>
 <script>
 
