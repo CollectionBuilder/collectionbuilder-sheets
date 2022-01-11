@@ -30,7 +30,7 @@
 </div>
 <script>
     // set up feature function as variable
-    var {{ functionName }} = function (items) { 
+    var {{ functionName }} = function (cb_items) { 
         {% if include.featured %}
         // featured terms
         var raw_terms = "{{ include.featured }}".split(";");
@@ -38,9 +38,9 @@
         {%- assign cloud-fields = include.field | default: "subject" | split: ";" -%}
         // get cloud fields from metadata
         var raw_terms = [];
-        for (var i = 0; i < items.length; i++) {
+        for (var i = 0; i < cb_items.length; i++) {
             {% for c in cloud-fields %}
-            if(items[i][{{ c | jsonify }}]) { raw_terms.push(items[i][{{ c | jsonify }}]); } 
+            if(cb_items[i][{{ c | jsonify }}]) { raw_terms.push(cb_items[i][{{ c | jsonify }}]); } 
             {% endfor %}
         }
         {% endif %}
