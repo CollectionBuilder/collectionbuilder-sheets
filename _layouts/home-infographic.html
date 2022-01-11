@@ -1,5 +1,6 @@
 ---
 layout: page
+custom-foot: js/home-js.html
 ---
 {%- assign items = site.data[site.metadata] -%}
 <div class="row">
@@ -9,6 +10,10 @@ layout: page
   
   </div>
   <div class="col-md-4">
+
+    {% include index/featured-terms.html field="subject" title="Top Subjects" btn-color="outline-info" max=8 %}
+
+    {% include index/featured-terms.html field="creator" title="Creators" btn-color="success" max=8 %}
 
   </div>
   
