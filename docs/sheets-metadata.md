@@ -41,9 +41,13 @@ For example:
 Please ensure your CSV is correctly formatted and encoded (UTF-8), being especially careful with the column names.
 We suggest creating your CSV using OpenRefine, Sheets, or LibreOffice Calc (and do not suggest using Excel, since Excel's CSV output is not correctly formatted).
 
+To use a CSV hosted in a GitHub repository, use the "raw" link.
+
+*Note:* depending on where your CSV is hosted, you may encounter [CORS errors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors).
+
 ## Use CSV in Project
 
-Your CSV can also be hosted directly in your CB project.
+Your CSV can also be hosted directly in your CB-Sheets project.
 Copy your CSV file into the "assets" folder then reference it in the "_config.yml" using a relative path. 
 
 For example:
