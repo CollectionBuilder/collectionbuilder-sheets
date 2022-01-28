@@ -1,26 +1,46 @@
-{%- assign formats = site.data[site.metadata] | map: "format" -%}
-{%- assign types = "image;audio;video;application" | split: ";" -%}
+{% capture functionName %}collection_object_counts{% endcapture %}
 <div class="card mb-3" >
     <div class="card-body">
         <h5 class="card-title">Objects</h5>
-        <p class="card-text">
-            {% for t in types %}
-            {%- assign count = formats | where_exp: 'item','item contains t' | size -%}
-            {% if count > 0 %}
-            {{ count }}
-            {% case t %}
-            {% when 'image' %} 
-            <a class="text-dark" href="{{ 'image' | prepend: '/browse.html#' | relative_url }}">Images <span class="far fa-image"></span></a><br>
-            {% when 'audio' %}
-            <a class="text-dark" href="{{ 'audio' | prepend: '/browse.html#' | relative_url }}">Audio <span class="far fa-file-audio"></span></a><br>
-            {% when 'video' %}
-            <a class="text-dark" href="{{ 'video' | prepend: '/browse.html#' | relative_url }}">Videos <span class="far fa-file-video"></span></a><br>
-            {% else %}
-            <a class="text-dark" href="{{ 'pdf' | prepend: '/browse.html#' | relative_url }}">PDFs <span class="far fa-file"></span></a><br>
-            {% endcase %}
-            {% endif %}
-            {%- endfor -%}
-            <a class="btn btn-sm btn-outline-secondary mt-2" href="{{ '/data.html' | relative_url }}">View table</a>
+        <p class="card-text" id="{{ functionName }}">
         </p>
     </div>
 </div>
+<script>
+    // set up feature function as variable
+    var {{ functionName }} = function (cb_items) { 
+        // get formats
+        var item_formats = cb_items.map(obj => { return obj["format"] });
+        // count formats and create button links
+        var format_buttons = "";
+        var image_count = item_formats.filter(f => { return f.includes("image") }).length;
+        if (image_count > 0) {
+            format_buttons += image_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#image">Images <span class="far fa-image"></span></a><br>';
+        }
+        var audio_count = item_formats.filter(f => { return f.includes("audio") }).length;
+        if (audio_count > 0) {
+            format_buttons += audio_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#audio">Audio <span class="far fa-file-audio"></span></a><br>';
+        }
+        var video_count = item_formats.filter(f => { return f.includes("video") }).length;
+        if (video_count > 0) {
+            format_buttons += video_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#video">Videos <span class="far fa-file-video"></span></a><br>';
+        }
+        var pdf_count = item_formats.filter(f => { return f.includes("pdf") }).length;
+        if (pdf_count > 0) {
+            format_buttons += pdf_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#pdf">PDFs <span class="far fa-file"></span></a><br>';
+        }
+        format_buttons += '<a class="btn btn-sm btn-outline-secondary mt-2" href="{{ "/data.html" | relative_url }}">View table</a>';
+
+        // add to page
+        document.getElementById("{{ functionName }}").innerHTML = format_buttons;
+ 
+    };
+
+    // add feature function to includeFunctions array
+    if(includeFunctions) {
+        includeFunctions.push({{ functionName }});
+    } else {
+        var includeFunctions = [{{ functionName }}];
+    }
+
+</script>
