@@ -7,7 +7,7 @@
 # HOME PAGE
 #
 # featured image is used in home page banner and in meta markup to represent the collection
-# use either an objectid (from an item in this collect), a relative location of an image in this repo (ex. /assets/img/feature.jpg), or a full url to an image elsewhere
+# use a relative location of an image in this repo (ex. /assets/img/feature.jpg), or a full url to an image elsewhere
 featured-image: /objects/demo_001.jpg
 # optional: add extra padding around collection title for a larger image feature. 
 home-title-y-padding: # Default is 8em
