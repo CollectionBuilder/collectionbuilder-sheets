@@ -9,45 +9,86 @@
 
     Options:
 
-    - "field" - a field from your metadata that will be used to auto generate top terms (required to auto generate)
+    - "field" - field(s) from your metadata that will be used to auto generate top terms (required to auto generate)
     - "featured" - a manually created list of featured terms, separated by ; semicolon (required if not auto generating from a field)
     - "title" - card title text inside card content area (optional)
     - "header" = card header text in bar above card content (optional)
     - "max" - max number of terms to display if auto generating (optional, default 5)
     - "btn-color" - a bootstrap color class to theme the buttons. Can be any bootstrap template color (e.g. info, success) or outline (e.g. outline-info, outline-success), including colors created in config-theme-colors. (optional, default "info")
+    - "stopwords" - list of terms to remove, separated by ";" (optional)
 
 {%- endcomment -%}
-
-{%- if include.featured -%}
-{% assign topTerms = include.featured | split: ";" %}
-{%- else -%}
-
-{% comment %} 
-    Use termsField and termsMax to customize feature 
-{% endcomment %}
-{% assign termsField = include.field | default: "subject" %}
-{% assign termsMax = include.max | default: 5 %}
-
-{% comment %} 
-    Liquid below cleans and counts unique terms 
-{% endcomment %}
-{% assign rawTerms = site.data[site.metadata] | map: termsField | join: ";" | split: ";" %}
-{% capture terms %}{% for t in rawTerms %}{% if t != "" and t != " " %}{{ t | strip | downcase }};{% endif %}{% endfor %}{% endcapture %}
-{% assign terms = terms | split: ";" %}
-{% assign uniqueTerms = terms | uniq | sort %}
-{% capture termsCount %}{% for unique in uniqueTerms %}{% assign count = terms | where_exp: 'item', 'item == unique' | size %}{{ count | prepend: '0000' | slice: -4, 4 }}||{{ unique | capitalize }}{% unless forloop.last %};{% endunless %}{% endfor %}{% endcapture %}
-{% assign termsCount = termsCount | split: ";" | sort | reverse %}
-{% capture topTerms %}
-{% for i in termsCount limit: termsMax %}{{ i | split: "||" | last }};{% endfor %}{% endcapture %}
-{% assign topTerms = topTerms | split: ";" %}
-{%- endif -%}
+{% capture functionName %}featured_terms_{{ include.field | default: include.featured | slugify | replace: "-","_" }}{% endcapture %}
 <div class="card mb-3">
     {% if include.header %}<h5 class="card-header">{{ include.header }}</h5>{% endif %}
     <div class="card-body">
         {% if include.title %}<h5 class="card-title">{{ include.title }}</h5>{% endif %}
         <p class="card-text">
-            {% for s in topTerms %}
-            <a class="btn btn-sm btn-{{ include.btn-color | default: 'info' }} m-1" href="{{ s | strip | url_param_escape | prepend: '/browse.html#' | relative_url }}">{{ s | strip }}</a>{% endfor %}
+            <div id="{{ functionName }}"></div>
         </p>
     </div>
 </div>
+<script>
+    // set up feature function as variable
+    var {{ functionName }} = function (cb_items) { 
+        {% if include.featured %}
+        // featured terms
+        var raw_terms = "{{ include.featured }}".split(";");
+        {% else %}
+        {%- assign cloud-fields = include.field | default: "subject" | split: ";" -%}
+        // get cloud fields from metadata
+        var raw_terms = [];
+        for (var i = 0; i < cb_items.length; i++) {
+            {% for c in cloud-fields %}
+            if(cb_items[i][{{ c | jsonify }}]) { raw_terms.push(cb_items[i][{{ c | jsonify }}]); } 
+            {% endfor %}
+        }
+        {% endif %}
+        // split multivalued fields and clean up extra white space
+        const re = /\s*;+\s*/;
+        var clean_terms = raw_terms.join(";").toLowerCase().split(re);
+        // find unique terms
+        var unique_terms = clean_terms.filter(function(value, index, self) { return self.indexOf(value) === index; });
+        // count unique values 
+        var terms = [];
+        for (var i = 0; i < unique_terms.length; i++) {
+            var count = clean_terms.filter(function(t) { return t == unique_terms[i] }).length;
+            terms.push([unique_terms[i],count]);
+        }
+        {% if stopwords %}/* apply stopwords */
+        var stopWords = {{ stopwords | downcase | split: ';' | jsonify }};
+        terms = terms.filter(function(a) { return stopWords.indexOf(a[0]) < 0;});{% endif %}
+        // sort by count
+        terms.sort(function(a, b){ return b[1] - a[1] });
+        
+        {% if include.max %}
+        // set size
+        if (terms.length > {{ include.max }}) {
+            var cloud_size = {{ include.max }};
+        } else {
+            var cloud_size = terms.length;
+        }
+        {% else %}
+        var cloud_size = terms.length;
+        {% endif %}
+        //
+        // get div
+        var cloud = document.getElementById("{{ functionName }}");
+        // create each term link
+        var cloud_items = "";
+        for (i = 0; i < cloud_size; i++) {
+            cloud_items += '<a class="btn btn-{{ include.btn-color | default: "info" }} m-1" href="{{ "/browse.html" | relative_url }}#' + encodeURIComponent(terms[i][0]) + '" >' + terms[i][0] + '</a>';
+        }
+        // add to card div
+        cloud.innerHTML = cloud_items;
+
+    };
+
+    // add feature function to includeFunctions array
+    if(includeFunctions) {
+        includeFunctions.push({{ functionName }});
+    } else {
+        var includeFunctions = [{{ functionName }}];
+    }
+
+</script>

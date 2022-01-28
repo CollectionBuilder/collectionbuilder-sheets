@@ -3,7 +3,7 @@ var cb_items = [];
 
 // function to process items from Sheets and store
 function cb_items_init(results) {
-  cb_items = results.data;
+  cb_items = results.data.filter(item => item["objectid"]);
   sessionStorage.setItem("cb_items_store", JSON.stringify(cb_items));
   pageInit(cb_items);
 }
