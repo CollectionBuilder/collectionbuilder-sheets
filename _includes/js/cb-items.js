@@ -3,10 +3,17 @@ var cb_items = [];
 var config_metadata = "{{ site.metadata-csv | relative_url }}";
 
 // function to process items from Sheets and store
-function cb_items_init(results) {
-  cb_items = results.data.filter(item => item["objectid"]);
-  sessionStorage.setItem("cb_items_store", JSON.stringify(cb_items));
-  pageInit(cb_items);
+function cb_items_init(config_metadata) {
+  /* use papaparse to get metadata from configured CSV URL, then init page */
+  Papa.parse(config_metadata, {
+    download: true,
+    header: true,
+    complete: (results) => { 
+      cb_items = results.data.filter(item => item["objectid"]);
+      sessionStorage.setItem("cb_items_store", JSON.stringify(cb_items));
+      pageInit(cb_items);
+    }
+  });
 }
 // check for sessionStored items
 if (sessionStorage.getItem("cb_items_store")) {
@@ -14,12 +21,7 @@ if (sessionStorage.getItem("cb_items_store")) {
   pageInit(cb_items);
 
 } else if (config_metadata != "") { 
-  /* use papaparse to get metadata from configured CSV URL, then init page */
-  Papa.parse(config_metadata, {
-    download: true,
-    header: true,
-    complete: (results) => cb_items_init(results)
-  });
+  cb_items_init(config_metadata);
 } else {
   // if no CSV is configured, ask to load local file
   // set up select file form
@@ -42,10 +44,7 @@ if (sessionStorage.getItem("cb_items_store")) {
     document.querySelector("#fileSelectCard .card-body").innerHTML = "<h2>Metadata loaded--> Please reload page!</h2>";
     // give file to papa parse and init
     var selectedFile = event.target.files[0];
-    Papa.parse(selectedFile, {
-      header: true,
-      complete: (results) => cb_items_init(results)
-    });
+    cb_items_init(selectedFile);
   });
 
 }
