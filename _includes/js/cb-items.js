@@ -41,10 +41,11 @@ if (sessionStorage.getItem("cb_items_store")) {
   // add listener to file selector
   var fileSelector = document.getElementById("selectFile");
   fileSelector.addEventListener('change', (event) => {
-    document.querySelector("#fileSelectCard .card-body").innerHTML = "<h2>Metadata loaded--> Please reload page!</h2>";
     // give file to papa parse and init
     var selectedFile = event.target.files[0];
     cb_items_init(selectedFile);
+    // reload
+    location.reload();
   });
 
 }
