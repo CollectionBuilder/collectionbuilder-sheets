@@ -48,3 +48,15 @@ if (sessionStorage.getItem("cb_items_store")) {
   });
 
 }
+{% if site.development-refresh == true %}
+var refreshButton = document.createElement("div");
+refreshButton.classList.add("fixed-top");
+refreshButton.innerHTML = '<button class="btn btn-sm btn-secondary m-3" onclick="resetStore()" id="refreshButton">Refresh Metadata</button>';
+document.body.appendChild(refreshButton);
+function resetStore () {
+  // remove data
+  sessionStorage.removeItem("cb_items_store");
+  // reload
+  location.reload();
+}
+{%- endif -%}
