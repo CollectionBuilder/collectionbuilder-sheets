@@ -44,9 +44,9 @@ var {{ functionName }} = function (cb_items) {
     if (record) {
         // find file link
         if (record.filename.includes("/")) {
-            audio_src = record.filename;
+            var audio_src = record.filename;
         } else {
-            audio_src = "{{ '/objects/' | relative_url }}" + record.filename;
+            var audio_src = "{{ '/objects/' | relative_url }}" + record.filename;
         }
         // add src
         document.querySelector("#{{ functionName }} audio").innerHTML = `<source src="${audio_src}" >`;
