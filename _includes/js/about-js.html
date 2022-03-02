@@ -1,0 +1,16 @@
+<script>
+
+function pageInit(items) {
+    // check for include functions on page
+    if(includeFunctions) { 
+        // iterate over functions and init
+        for (var i = 0; i < includeFunctions.length; ++i) {
+            includeFunctions[i](items);
+        }
+    }
+}
+
+// add metadata
+{% include js/cb-items.js %}
+
+</script>
