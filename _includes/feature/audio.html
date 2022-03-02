@@ -18,20 +18,56 @@
     Audio file may not play correctly from dev server on Chrome browser! It will work in production.
 
 {%- endcomment -%}
+{% assign functionName = "" %}
 {% if include.objectid contains "/" %}
 {%- capture src -%}{{ include.objectid | relative_url }}{%- endcapture -%}
 {%- capture audio_link -%}{{ src }}{%- endcapture -%}
-{%- capture audio_caption -%}{{ include.caption }}{%- endcapture -%}
 {% else %}
-{%- assign item = site.data[site.metadata] | where: "objectid", include.objectid | first -%}
-{%- capture audio_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: item.objectid }}{%- endcapture -%}
-{%- capture src -%}{% if item.filename contains '/' %}{{ item.filename | relative_url }}{% else %}{{ '/objects/' | append: item.filename | relative_url }}{% endif %}{% endcapture %}
-{%- capture audio_caption -%}{% if include.caption %}{{ include.caption }}{% else %}{{ item.title }}{% endif %}{%- endcapture -%}
+{%- capture audio_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: include.objectid }}{%- endcapture -%}
+{%- capture src -%}{% endcapture %}
+{% capture functionName %}audio_feature_{{ include.objectid | slugify | replace: "-","_" }}{% endcapture %}
 {% endif %}
-<p class="text-center my-3">
+{%- capture audio_caption -%}{{ include.caption }}{%- endcapture -%}
+<p class="text-center my-3" {% if functionName != '' %}id="{{ functionName }}"{% endif %}>
     <audio controls class="w-100">
         <source src="{{ src }}" >
         Your browser does not support the audio element.
     </audio>
     {% unless include.caption == false %}<small class="figure-caption"><a href="{{ audio_link }}">{{ audio_caption }}</a></small>{% endunless %}
 </p>
+{% if functionName != '' %}
+<script>
+// set up feature function as variable
+var {{ functionName }} = function (cb_items) { 
+    // find item
+    var record = cb_items.find(item => item.objectid == {{ include.objectid | jsonify }});
+    if (record) {
+        // find file link
+        if (record.filename.includes("/")) {
+            audio_src = record.filename;
+        } else {
+            audio_src = "{{ '/objects/' | relative_url }}" + record.filename;
+        }
+        // add src
+        document.querySelector("#{{ functionName }} audio").innerHTML = `<source src="${audio_src}" >`;
+        {% unless include.caption %}
+        // add caption
+        document.querySelector("#{{ functionName }} .figure-caption a").innerHTML = record.title;
+        {% endunless %}
+    } else {
+        // message if objectid doesn't exist
+        console.log("Issue with audio include: objectid {{ include.objectid }} does not exist.");
+       document.querySelector("#{{ functionName }}").innerHTML= "<span class='text-danger'>Problem with this audio include: objectid {{ include.objectid }} does not exist.</span>";
+    }
+
+};
+
+// add feature function to includeFunctions array
+if(includeFunctions) {
+    includeFunctions.push({{ functionName }});
+} else {
+    var includeFunctions = [{{ functionName }}];
+}
+
+</script>
+{% endif %}
