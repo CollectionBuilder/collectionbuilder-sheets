@@ -80,3 +80,14 @@ a {
         float: left!important;
     } 
 }
+
+/* development-refresh buttons */
+.dev-buttons {
+    position: fixed;
+    left: 15px;
+    bottom: 15px;
+    padding: 5px;
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
