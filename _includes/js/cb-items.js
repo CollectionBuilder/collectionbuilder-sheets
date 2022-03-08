@@ -24,6 +24,8 @@ if (sessionStorage.getItem("cb_items_store")) {
   cb_items = JSON.parse(sessionStorage.getItem("cb_items_store"));
   pageInit(cb_items);
 
+} else if (sessionStorage.getItem("cb_metadata_set") && sessionStorage.getItem("cb_metadata_set").includes("https://")) {
+  cb_items_init(sessionStorage.getItem("cb_metadata_set"));
 } else if (config_metadata != "") { 
   cb_items_init(config_metadata);
 } else {
@@ -37,11 +39,18 @@ if (sessionStorage.getItem("cb_metadata_set")) {
   var refreshButton = document.createElement("div");
   refreshButton.classList.add("dev-buttons");
   refreshButton.innerHTML = `<div class="btn-group-vertical">
-    <button class="btn btn-sm btn-secondary" onclick="resetStore()" id="refreshButton">Reset Metadata</button>
-    <a class="btn btn-sm btn-info" href="{{ '/setup/' | relative_url }}">Configure Metadata</a>
+    ${ sessionStorage.getItem("cb_metadata_set").includes("https://") ? '<button class="btn btn-sm btn-info" onclick="refreshMetadata()" id="refreshButton">Refresh Metadata</button>' : '' }
+    <a class="btn btn-sm btn-warning" href="{{ '/setup/' | relative_url }}">Change Metadata</a>
+    <button class="btn btn-sm btn-secondary" onclick="resetMetadata()" id="refreshButton">Reset</button>
     </div>`;
   document.body.appendChild(refreshButton);
-  function resetStore () {
+  function refreshMetadata () {
+    // remove data
+    sessionStorage.removeItem("cb_items_store");
+    // reload
+    location.reload();
+  }
+  function resetMetadata () {
     // remove data
     sessionStorage.removeItem("cb_items_store");
     sessionStorage.removeItem("cb_metadata_set");
