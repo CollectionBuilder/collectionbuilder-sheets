@@ -58,7 +58,7 @@
     // set up feature function variable 
     var {{ functionName }} = function(cb_items) { 
         // filter to items with format image or youtubeid
-        var carouselItems = cb_items.filter(function(item) { return item.youtubeid != "" || item.format.includes("image"); });
+        var carouselItems = cb_items.filter(function(item) { return item.youtubeid || item.format.includes("image"); });
         
         /* shuffle items */
         carouselItems.sort(function() { return 0.5 - Math.random() });
@@ -76,7 +76,7 @@
         // add items to carousel 
         for (i=0; i < carousel_size; i++) {
             // calculate item image location
-            if(carouselItems[i]["youtubeid"] != "") {
+            if(carouselItems[i]["youtubeid"]) {
                 itemImg = "https://img.youtube.com/vi/" + carouselItems[i]["youtubeid"] + "/hqdefault.jpg";
             } else if (carouselItems[i]["filename"].includes("/")) {
                 itemImg = carouselItems[i]["filename"];
