@@ -29,9 +29,13 @@ if (sessionStorage.getItem("cb_items_store")) {
 } else if (config_metadata != "") { 
   cb_items_init(config_metadata);
 } else {
-  // if no CSV is configured, redirect to the set up page
-  window.location.href = "{{ '/setup/' | absolute_url }}";
-
+  // if no CSV is configured, add a warning alert
+  var metadataAlert = document.createElement("div");
+  metadataAlert.classList.add("container");
+  metadataAlert.innerHTML = `<div class="alert alert-warning mt-3 text-center h3" role="alert">
+    This site has no metadata set in "_config.yml"<br> please <a href="{{ '/setup/' | relative_url }}" class="alert-link">visit the setup page</a> to configure!
+  </div>`;
+  document.querySelector("main").prepend(metadataAlert);
 }
 
 {% if site.development-refresh == true %}
