@@ -7,7 +7,7 @@
     // find current configured metadata
     var cb_metadata_set = sessionStorage.getItem("cb_metadata_set") ? sessionStorage.getItem("cb_metadata_set") : config_metadata;
     // display configured metadata
-    document.getElementById("current-metadata").innerHTML = cb_metadata_set != "" ? cb_metadata_set : "None!";
+    document.getElementById("current-metadata").innerHTML = cb_metadata_set != "" ? cb_metadata_set : "<span class='text-danger h2'>None!</span>";
     
     // function to parse from forms
     function cb_items_setup(metadata_file) {
