@@ -11,7 +11,7 @@ custom-foot: js/setup-js.html
 This page can temporarily configure the metadata used on the site to test your CollectionBuilder spreadsheet. 
 The configurations are stored in your browser's session storage, so will remain only until you close this window!
 
-Please check the [Metadata Guidelines page]({{ '/metadata.html' | relative_url }}) for information about how to set up and publish your metadata spreadsheet.
+Please check the [Metadata Guidelines page]({{ '/metadata.html' | relative_url }}) for information about how to create and publish your metadata spreadsheet.
 {% endcapture %}{% include feature/alert.html text=info color="info" %}
 
 The currently configured metadata is:

@@ -12,20 +12,22 @@ To create metadata compatible with this CollectionBuilder-Sheets instance the be
 [CollectionBuilder Metadata Template](https://docs.google.com/spreadsheets/d/1Uv9ytll0hysMOH1j-VL1lZx6PWvc1zf3L35sK_4IuzI/copy?usp=sharing){:.btn .btn-outline-success target="_blank" rel="noopener"}
 {:.text-center}
 
-Describe your items in your copy of the template, following the guidelines below. 
-Once you have items added and your Sheet published, you can [test your metadata]({{ '/setup/' | relative_url }}).
+Alternatively, you can [download the template CSV]({{ '/assets/metadata-template.csv' | relative_url }}).
+Describe your items in your copy of the template, following the [guidelines below](#metadata-fields). 
+
+Once you have items added and your [Sheet published](#{{ 'Publish and Test Metadata' | slugify }}), you can [test your metadata]({{ '/setup/' | relative_url }}).
 
 -----------
 
 ## Metadata Fields 
 
 Each of the columns of the metadata template spreadsheet are described below
-(i.e. **this is how to fill in your metadata spreadsheet!**).
-Please note *required* means not having a value will result in your metadata not functioning in the digital collection.
+(i.e. **this is how to fill in your spreadsheet!**).
+Please note *required* means that not having a value will result in your metadata not functioning in the digital collection.
 All other fields are optional, but suggested!
 
 These guidelines are a summary of fields used in this demo collection. 
-For creating your own project and more details, see the full [CollectionBuilder metadata docs](https://collectionbuilder.github.io/cb-docs/docs/metadata/).
+For creating your own project (where you can customize the metadata however you want) and more details, see the full [CollectionBuilder metadata docs](https://collectionbuilder.github.io/cb-docs/docs/metadata/).
 
 ### objectid 
 
@@ -40,16 +42,19 @@ For creating your own project and more details, see the full [CollectionBuilder 
 
 - The full URL to the object's file online *or* the full filename of the item's file contained in the "objects" folder of this repository.
 - *Please note:* if you are testing online using the demo collection, only links will work!
+- Leave blank if their is no object file, or if it is a YouTube video.
 - Examples:
     - link to image: `https://digital.lib.uidaho.edu/digital/iiif/bar-stock/1147/full/max/0/default.jpg`
     - link to image: `https://www.lib.uidaho.edu/collectionbuilder/demo-objects/mg101_b6_photographs_01.jpg`
     - link to PDF: `https://cdm17254.contentdm.oclc.org/utils/getfile/collection/idahowater/id/186/filename/iwdl-cda_ellis_1932.pdf`
+    - image in the repository "objects" folder: `demo_001.jpg` 
+    - PDF in the repository "objects" folder: `demo_002.pdf`
 - **Important note on external items:** URLs to external media should always be secure HTTPS links. Media at HTTP links are likely to be blocked by browser security defaults as [mixed content](https://developer.mozilla.org/en-US/docs/Web/Security/Mixed_content), thus will not appear on your pages!
 
 ### youtubeid
 
 - This is the unique string assigned to a video when it is uploaded to YouTube. An easy way to find this is to look at the url for your YouTube video. The ID will be the string attached to the end of the url. For example, in "https://www.youtube.com/watch?v=sHhk1eAgopU" the youtubeid is `sHhk1eAgopU`.
-- Fill in `youtubeid` for **only** for YouTube items--leave it blank for all other items! If your collection does not contain YouTube videos, you can delete the column.
+- Fill in `youtubeid` **only** for YouTube items--leave it blank for all other items! If your collection does not contain YouTube videos, you can delete the column.
 - Example value: `sHhk1eAgopU`
 
 ### title
@@ -138,7 +143,7 @@ For creating your own project and more details, see the full [CollectionBuilder 
     - Image: `image/jpeg`
     - Document: `application/pdf`
     - Audio: `audio/mp3`
-    - Video: `video/mp4`
+    - Video / YouTube: `video/mp4`
 
 ### rights
 
@@ -149,10 +154,6 @@ For creating your own project and more details, see the full [CollectionBuilder 
 
 - This field is a standardized rights statement, designated in the form of a URI. It should be presented as a [creativecommons.org](https://creativecommons.org/){:target="_blank" rel="noopener"} URI or a [rightsstatements.org](https://rightsstatements.org/en/){:target="_blank" rel="noopener"} URI. 
 - This helps users understand how they can use the digital objects, and libraries / project creators do their due diligence to represent intellectual property.
-- For this project, we will be choosing from [rightsstatements.org](https://rightsstatements.org/en/){:target="_blank" rel="noopener"}.
-- Choose from:
-    - Items created before 1927 are public domain in USA. Use: `http://rightsstatements.org/vocab/NoC-US/1.0/`
-    - For other items, we will use "Educational Use Permitted": `http://rightsstatements.org/vocab/InC-EDU/1.0/`
 
 ----------
 
@@ -168,24 +169,31 @@ When creating metadata in a spreadsheet we tend to use this terminology for the 
 
 ----------
 
-## How to Publish Your Google Sheet
+## Publish and Test Metadata
+
+To use your metadata in CollectionBuilder-Sheets it must be published on the web or downloaded to your local machine. 
+The [Test Your Metadata]({{ '/setup/' | relative_url }}) page can temporarily configure the metadata used on this demo site, so that you can test your spreadsheet.
+
+Follow one of the options below to get started!
+
+### Publish Your Google Sheet
 
 - On your Google Sheet, click "File" and select "Publish to the Web".
 - On the popup modal, use the dropdowns in "Link" tab to select the sheet name of your metadata (usually "Sheet 1") and "Comma-separated values (.csv)" options, then click "Publish" button.
 - Copy the link that is provided.
-- Paste the link into form above and click Submit.
+- Paste the link into the [setup form]({{ '/setup/' | relative_url }}) and click Submit.
 
 For example, a published link looks like:
 
 `https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?gid=0&single=true&output=csv`
 
-## How to Download Your Google Sheet as CSV
+### Download Your Google Sheet as CSV
 
-- On your Google Sheet, click "File" and select “Download as Comma-separated values”
+- On your Google Sheet, click "File" and select "Download as Comma-separated values"
 - The file should download to your computer's Downloads folder
-- Click in the "Choose file" box in the form above and navigate in your file explorer to select the downloaded CSV.
+- On the [setup form]({{ '/setup/' | relative_url }}), click in the "Choose file" box, navigate in your file explorer to select the downloaded CSV, and click Submit.
 
-## Other Web CSV
+### Other Web CSV
 
 If you have a CSV available anywhere on the web, you can use it by referencing the full URL. 
 However, depending on where your CSV is hosted, you may encounter [CORS errors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors).
@@ -194,4 +202,11 @@ For example, to use a CSV hosted in a GitHub repository, use the "raw" link:
 
 `https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv`
 
-We suggest creating your CSV using OpenRefine, Sheets, or LibreOffice Calc (and do not suggest using Excel, since Excel's CSV output is not correctly formatted).
+Paste the link into the [setup form]({{ '/setup/' | relative_url }}) and click Submit.
+
+### Spreadsheet on Your Local Computer
+
+You can [download the template CSV]({{ '/assets/metadata-template.csv' | relative_url }}) to your local machine and edit the spreadsheet using software on your computer.
+We suggest editing your CSV using [LibreOffice](https://www.libreoffice.org/) Calc, [OpenRefine](https://openrefine.org/), or Google Sheets (and do not suggest using Excel, since Excel's CSV output is not correctly formatted).
+
+When your CSV is ready, visit the [setup form]({{ '/setup/' | relative_url }}), click in the "Choose file" box, navigate in your file explorer to select the CSV, and click Submit.
