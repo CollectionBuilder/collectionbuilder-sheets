@@ -26,7 +26,7 @@ To change the metadata you have two options: paste in the full link for a CSV ho
         <p>
             <form id="metadataUrl" onsubmit="metadata_url_selector(); return false;">
                 <div class="input-group">
-                    <input type="url" id="csvUrl" class="form-control" pattern="https://.*" placeholder="Paste in the full URL to CSV hosted online">
+                    <input type="url" id="csvUrl" class="form-control" placeholder="Paste in the full URL to CSV hosted online">
                     <div class="input-group-append">
                         <button class="btn btn-dark" type="submit">
                             Submit
