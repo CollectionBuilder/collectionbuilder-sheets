@@ -12,10 +12,24 @@ To create metadata compatible with this CollectionBuilder-Sheets instance the be
 [CollectionBuilder Metadata Template](https://docs.google.com/spreadsheets/d/1Uv9ytll0hysMOH1j-VL1lZx6PWvc1zf3L35sK_4IuzI/copy?usp=sharing){:.btn .btn-outline-success target="_blank" rel="noopener"}
 {:.text-center}
 
-Alternatively, you can [download the template CSV]({{ '/assets/metadata-template.csv' | relative_url }}).
+Alternatively, you can [download the template CSV]({{ '/assets/metadata-template.csv' | relative_url }}) and work on your local machine.
+We suggest editing your CSV using [LibreOffice](https://www.libreoffice.org/) Calc, [OpenRefine](https://openrefine.org/), or Google Sheets (and do not suggest using Excel, since Excel's CSV output is not correctly formatted).
+
 Describe your items in your copy of the template, following the [guidelines below](#metadata-fields). 
 
-Once you have items added and your [Sheet published](#{{ 'Publish and Test Metadata' | slugify }}), you can [test your metadata]({{ '/setup/' | relative_url }}).
+Once you have items added you can [test your metadata]({{ '/setup/' | relative_url }}).
+
+----------
+
+## Metadata Spreadsheet Terminology
+
+{% include feature/image.html objectid="/assets/img/metadata_spreadsheet_parts.svg" alt="spreadsheet interface with parts labeled, including header, row, column, cell, and active cell" %}
+
+When creating metadata in a spreadsheet we tend to use this terminology for the parts of the table:
+
+- *columns* => "fields" (the metadata template elements used to describe specific qualities of all objects, essentially the categories of descriptions)
+- *rows* => "records" or "items" (each row represents one object's description)
+- *cells* => "values" (the individual chunks of metadata)
 
 -----------
 
@@ -154,59 +168,3 @@ For creating your own project (where you can customize the metadata however you 
 
 - This field is a standardized rights statement, designated in the form of a URI. It should be presented as a [creativecommons.org](https://creativecommons.org/){:target="_blank" rel="noopener"} URI or a [rightsstatements.org](https://rightsstatements.org/en/){:target="_blank" rel="noopener"} URI. 
 - This helps users understand how they can use the digital objects, and libraries / project creators do their due diligence to represent intellectual property.
-
-----------
-
-## Metadata Spreadsheet Terminology
-
-{% include feature/image.html objectid="/assets/img/metadata_spreadsheet_parts.svg" alt="spreadsheet interface with parts labeled, including header, row, column, cell, and active cell" %}
-
-When creating metadata in a spreadsheet we tend to use this terminology for the parts of the table:
-
-- *columns* => "fields" (the metadata template elements used to describe specific qualities of all objects, essentially the categories of descriptions)
-- *rows* => "records" or "items" (each row represents one object's description)
-- *cells* => "values" (the individual chunks of metadata)
-
-----------
-
-## Publish and Test Metadata
-
-To use your metadata in CollectionBuilder-Sheets it must be published on the web or downloaded to your local machine. 
-The [Test Your Metadata]({{ '/setup/' | relative_url }}) page can temporarily configure the metadata used on this demo site, so that you can test your spreadsheet.
-
-Follow one of the options below to get started!
-
-### Publish Your Google Sheet
-
-- On your Google Sheet, click "File" and select "Publish to the Web".
-- On the popup modal, use the dropdowns in "Link" tab to select the sheet name of your metadata (usually "Sheet 1") and "Comma-separated values (.csv)" options, then click "Publish" button.
-- Copy the link that is provided.
-- Paste the link into the [setup form]({{ '/setup/' | relative_url }}) and click Submit.
-
-For example, a published link looks like:
-
-`https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?gid=0&single=true&output=csv`
-
-### Download Your Google Sheet as CSV
-
-- On your Google Sheet, click "File" and select "Download as Comma-separated values"
-- The file should download to your computer's Downloads folder
-- On the [setup form]({{ '/setup/' | relative_url }}), click in the "Choose file" box, navigate in your file explorer to select the downloaded CSV, and click Submit.
-
-### Other Web CSV
-
-If you have a CSV available anywhere on the web, you can use it by referencing the full URL. 
-However, depending on where your CSV is hosted, you may encounter [CORS errors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors).
-
-For example, to use a CSV hosted in a GitHub repository, use the "raw" link:
-
-`https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv`
-
-Paste the link into the [setup form]({{ '/setup/' | relative_url }}) and click Submit.
-
-### Spreadsheet on Your Local Computer
-
-You can [download the template CSV]({{ '/assets/metadata-template.csv' | relative_url }}) to your local machine and edit the spreadsheet using software on your computer.
-We suggest editing your CSV using [LibreOffice](https://www.libreoffice.org/) Calc, [OpenRefine](https://openrefine.org/), or Google Sheets (and do not suggest using Excel, since Excel's CSV output is not correctly formatted).
-
-When your CSV is ready, visit the [setup form]({{ '/setup/' | relative_url }}), click in the "Choose file" box, navigate in your file explorer to select the CSV, and click Submit.
