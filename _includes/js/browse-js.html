@@ -10,6 +10,7 @@ var filterTextBox = document.querySelector('#filterTextBox');
 var filterButton = document.querySelector("#filterButton");
 var browseItemsDiv = document.querySelector("#browseItems");
 var query = "";
+var browse_items;
 
 /* function to make each item card on page */
 function makeCard(obj) {
@@ -109,8 +110,13 @@ function filterItems(arr,q) {
     // filter items
     var filteredItems = [];
     for (var i = 0, len = arr.length; i < len; i++) {
+      // get browse fields from metadata
       var val = "";
-      for (var k in arr[i]) { val += arr[i][k] + " "; }
+      if(arr[i]["title"]) { val += arr[i]["title"] + " "; }
+      {% for f in fields  %}
+      if(arr[i]["{{ f.field }}"]) { val += arr[i]["{{ f.field }}"] + " "; }
+      {% endfor %}
+      // filter
       if(val.toUpperCase().indexOf(q) != -1){
         filteredItems.push(arr[i]);
       }
@@ -166,7 +172,7 @@ window.addEventListener("hashchange", function() {
     query = decodeURIComponent(location.hash.substr(1));
     filterTextBox.value = query;
     // filter
-    filterItems(items,query);
+    filterItems(cb_items,query);
 });
 
 /* item array sorting function */
@@ -197,12 +203,12 @@ sortOptions.forEach((button) => {
     sortFilter.innerHTML = display_name;
     // send to sort and filter
     if (field != 'random') {
-        sorting(items, field);
-        filterItems(items,query);
+        sorting(cb_items, field);
+        filterItems(cb_items,query);
     }
     else {
-        shuffle(items);
-        filterItems(items,query);
+        shuffle(cb_items);
+        filterItems(cb_items,query);
     }
   });
 }); 
