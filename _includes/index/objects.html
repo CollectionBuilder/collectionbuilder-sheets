@@ -15,19 +15,19 @@
         var format_buttons = "";
         var image_count = item_formats.filter(f => { return f.includes("image") }).length;
         if (image_count > 0) {
-            format_buttons += image_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#image">Images <span class="far fa-image"></span></a><br>';
+            format_buttons += image_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#image">Images <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-image"/></svg></a><br>';
         }
         var audio_count = item_formats.filter(f => { return f.includes("audio") }).length;
         if (audio_count > 0) {
-            format_buttons += audio_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#audio">Audio <span class="far fa-file-audio"></span></a><br>';
+            format_buttons += audio_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#audio">Audio <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-audio"/></svg></a><br>';
         }
         var video_count = item_formats.filter(f => { return f.includes("video") }).length;
         if (video_count > 0) {
-            format_buttons += video_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#video">Videos <span class="far fa-file-video"></span></a><br>';
+            format_buttons += video_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#video">Videos <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-video"/></svg></a><br>';
         }
         var pdf_count = item_formats.filter(f => { return f.includes("pdf") }).length;
         if (pdf_count > 0) {
-            format_buttons += pdf_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#pdf">PDFs <span class="far fa-file"></span></a><br>';
+            format_buttons += pdf_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#pdf">PDFs <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-pdf"/></svg></a><br>';
         }
         format_buttons += '<a class="btn btn-sm btn-outline-secondary mt-2" href="{{ "/data.html" | relative_url }}">View table</a>';
 
