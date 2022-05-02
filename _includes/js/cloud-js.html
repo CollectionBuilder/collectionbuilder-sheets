@@ -41,7 +41,7 @@ function makeGrid(terms) {
     /* calculate max size */
     var counts = terms.map(function(obj){ return obj[1]; });
     var countMax = counts.reduce(function(a, b) { return Math.max(a, b); });
-    {% if page.shuffle == true %}shuffle(terms);{% endif %}
+    {% if page.shuffle == true %}shuffle(terms);{% else %}terms.sort();{% endif %}
     // create each term link
     for (i = 0; i < terms.length; i++) {
         size = Math.round(terms[i][1] * 9 / countMax + 1); 
