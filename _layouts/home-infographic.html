@@ -1,8 +1,8 @@
 ---
+# Default home page with boxes providing collection stats
 layout: page
 custom-foot: js/home-js.html
 ---
-{%- assign items = site.data[site.metadata] -%}
 <div class="row">
   <div class="col-md-8">
 
@@ -15,7 +15,7 @@ custom-foot: js/home-js.html
 
     {% include index/time.html %}
 
-    {% include index/featured-terms.html field="subject" title="Top Subjects" btn-color="outline-info" max=8 %}
+    {% include index/featured-terms.html field="subject" title="Top Subjects" btn-color="primary" max=8 %}
 
     {% include index/featured-terms.html field="creator" title="Creators" btn-color="success" max=8 %}
 
