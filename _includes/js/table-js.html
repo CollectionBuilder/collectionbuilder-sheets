@@ -1,5 +1,6 @@
 {% assign fcount = site.data.config-table | size %}
 {%- assign fields = site.data.config-table | map: 'field' -%}
+/* load DataTables with jquery bundled */
 <script type="text/javascript" language="javascript" src="{{ '/assets/lib/datatables/datatables.min.js' | relative_url }}"></script>
 <script>
 
