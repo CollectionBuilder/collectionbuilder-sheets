@@ -1,0 +1,55 @@
+<script>
+
+    // set variables
+    var cb_items = [];
+    var config_metadata = "{{ site.metadata-csv | relative_url }}";
+    
+    // find current configured metadata
+    var cb_metadata_set = sessionStorage.getItem("cb_metadata_set") ? sessionStorage.getItem("cb_metadata_set") : config_metadata;
+    // display configured metadata
+    document.getElementById("current-metadata").innerHTML = cb_metadata_set != "" ? cb_metadata_set : "<span class='text-danger h2'>None!</span>";
+    
+    // function to parse from forms
+    function cb_items_setup(metadata_file) {
+      /* use papaparse to get metadata from configured CSV URL, then init page */
+      Papa.parse(metadata_file, {
+        download: true,
+        header: true,
+        complete: (results) => { 
+          sessionStorage.removeItem("cb_items_store");
+          // filter for objectid value
+          cb_items = results.data.filter(item => item["objectid"]);
+          // add to session storage
+          sessionStorage.setItem("cb_items_store", JSON.stringify(cb_items));
+          console.log(metadata_file);
+          // redirect to home
+          window.location.href = "{{ '/' | relative_url }}";
+        },
+        error: (err) => {
+            alert("There is an error parsing your CSV! Please check the configured URL or file.");
+        }
+      });
+    }
+    
+    // function for metadata local file form
+    function metadata_file_selector() {
+        // find filename 
+        var fileSelector = document.getElementById("csvFile");
+        var selectedFile = fileSelector.files[0];
+        var selectedFileName = selectedFile.name;
+        // record in session store
+        sessionStorage.setItem("cb_metadata_set",selectedFileName);
+        // give file to papa parse 
+        cb_items_setup(selectedFile);
+    }
+    // function for metadata link form
+    function metadata_url_selector() {
+        // file url 
+        var selectedUrl = document.getElementById("csvUrl").value;
+        // record in session store
+        sessionStorage.setItem("cb_metadata_set",selectedUrl);
+        // give url to papa parse
+        cb_items_setup(selectedUrl);
+    }
+    
+    </script>

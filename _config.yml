@@ -72,6 +72,8 @@ organization-logo-nav: https://cdil.lib.uidaho.edu/assets/img/logo.png
 # JEKYLL_ENV=production jekyll build
 # (this is done automatically by gh-pages build)
 #
+#
+development-refresh: true
 # ignore stuff
 exclude: [docs/, Rakefile, README.md, LICENSE]
 # compress CSS output

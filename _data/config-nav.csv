@@ -6,4 +6,7 @@ Locations,/locations.html
 Map,/map.html
 Timeline,/timeline.html
 Data,/data.html
-About,/about.html
+About,,
+About CollectionBuilder,/about.html,About
+Metadata Guidelines,/metadata.html,About
+Test your Metadata,/setup/,About
