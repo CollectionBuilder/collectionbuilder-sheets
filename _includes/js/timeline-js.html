@@ -1,7 +1,10 @@
+{%- if site.data.theme.icons -%}{% assign icons = site.data.theme.icons %}{% else %}
+{% assign cb_icons = site.pages | where: "name","cb-icons.svg" | first %}
+{% assign icons = cb_icons.icons %}{%- endif -%}
 <script>
 
 function makeTimelineRow(year) {
-    var yearRow = '<tr id="'+ year +'"><th><h3>' + year +'</h3></th><td><div class="row"></div></td></tr>';
+    var yearRow = '<tr id="y'+ year +'"><th><h3>' + year +'</h3></th><td><div class="row"></div></td></tr>';
     return yearRow;
 }
 
@@ -17,13 +20,13 @@ function makeCard(obj) {
     } else if (obj.format.includes("image")) {
         if(obj.filename.includes("/")) { thumbSrc = obj.filename; } else { thumbSrc = "{{ '/objects/' | relative_url }}" + obj.filename; }
     } else if (obj.format.includes("audio")) {
-        thumbSrc = '{{ "/assets/img/audio.svg" | relative_url }}';
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-audio }}.svg';
     } else if (obj.format.includes("video")) {
-        thumbSrc = '{{ "/assets/img/video.svg" | relative_url }}';  
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-video }}.svg';  
     } else if (obj.format.includes("pdf")) {
-        thumbSrc = '{{ "/assets/img/pdf.svg" | relative_url }}';
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-pdf }}.svg';
     } else {
-        thumbSrc = '{{ "/assets/img/file.svg" | relative_url }}';
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-default }}.svg';
     }  
     // start card
     if (obj.format.includes("image")){
@@ -53,9 +56,9 @@ function pageInit(items) {
     unique_years = clean_years.filter(function(value, index, self) { return self.indexOf(value) === index; }).sort((a, b) => a - b);
 
     $("#firstYear").html(unique_years[0]);
-    $("#firstYear").attr("href", "#" + unique_years[0]);
+    $("#firstYear").attr("href", "#y" + unique_years[0]);
     $("#lastYear").html(unique_years[unique_years.length - 1]);
-    $("#lastYear").attr("href", "#" + unique_years[unique_years.length - 1]);
+    $("#lastYear").attr("href", "#y" + unique_years[unique_years.length - 1]);
 
     // figure out navYears 
     var dropYears = "";
@@ -71,7 +74,7 @@ function pageInit(items) {
     }
     {% endif %}
     for (var i = 0; i < navYears.length; i++){
-        dropYears += '<a class="dropdown-item" href="#' + navYears[i] + '">' + navYears[i] + '</a>';
+        dropYears += '<a class="dropdown-item" href="#y' + navYears[i] + '">' + navYears[i] + '</a>';
     }
     $("#navDropYears").append(dropYears);
     
@@ -97,12 +100,17 @@ function pageInit(items) {
             $("#" + unique_years[i] + " td .row").append(cards);
         }
     }
+
     // init bootstrap tooltips
-    $('[data-toggle="tooltip"]').tooltip()
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
     // highlight year if hash
     if(window.location.hash) {
         var hashfilter = decodeURIComponent(location.hash.substr(1));
-        $("tr#" + hashfilter).addClass("bg-info");
+        document.querySelector("tr#" + hashfilter).classList.add("bg-info");
     }
 }
 

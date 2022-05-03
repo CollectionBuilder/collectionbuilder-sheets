@@ -45,7 +45,7 @@ function makeGrid(terms) {
     // create each term link
     for (i = 0; i < terms.length; i++) {
         size = Math.round(terms[i][1] * 9 / countMax + 1); 
-        cloud_items += '<a class="btn btn-{{ page.button | default: "outline-info" }} m-2 tagcloud' + size + '" href="{{ "/browse.html" | relative_url }}#' + encodeURIComponent(terms[i][0]) + '" >' + terms[i][0] + '</a>';
+        cloud_items += '<a class="btn btn-{{ page.button | default: "outline-primary" }} m-2 tagcloud' + size + '" href="{{ "/browse.html" | relative_url }}#' + encodeURIComponent(terms[i][0]) + '" >' + terms[i][0] + '</a>';
     }
     cloud.innerHTML = cloud_items;
 }
