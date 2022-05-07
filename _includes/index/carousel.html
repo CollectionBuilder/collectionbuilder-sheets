@@ -2,7 +2,7 @@
 
     Image item carousel.
     This include adds a Bootstrap Carousel component populated with randomly selected image items, designed with index page in mind. 
-    https://getbootstrap.com/docs/4.6/components/carousel/
+    https://getbootstrap.com/docs/5.1/components/carousel/
 
     E.G. --> {% include index/carousel.html title="Sample Items" height=450 %}
 
@@ -32,21 +32,21 @@
     <div class="card-body">
         {% if include.title %}<h5 class="card-title">{{ include.title }}</h5>{% endif %}
         
-        <div id="{{ functionName }}" class="carousel slide bg-dark rounded mb-3" data-ride="carousel">
-            <ol id="{{ functionName }}carouselIndicators" class="carousel-indicators">
+        <div id="{{ functionName }}" class="carousel slide bg-dark rounded mb-3" data-bs-ride="carousel">
+            <div id="{{ functionName }}carouselIndicators" class="carousel-indicators" class="carousel-indicators">
                 
-            </ol>
+            </div>
             <div id="{{ functionName }}carouselInner" class="carousel-inner">
                 
             </div>
-            <a class="carousel-control-prev" href="#{{ functionName }}" role="button" data-slide="prev">
+            <button class="carousel-control-prev" type="button" data-bs-target="#{{ functionName }}" data-bs-slide="prev">
                 <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="sr-only">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#{{ functionName }}" role="button" data-slide="next">
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#{{ functionName }}" data-bs-slide="next">
                 <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="sr-only">Next</span>
-            </a>
+                <span class="visually-hidden">Next</span>
+            </button>
         </div>
             
     </div>
@@ -85,16 +85,15 @@
             }
             // calculate item link
             itemLink = "{{ '/item.html' | relative_url | append: '?id=' }}" + carouselItems[i]["objectid"];
-            // active class for first item
-            if (i==0) {
-                active = "active";
-            } else {
-                active = "";
-            }
             // create indicator 
-            indicator = '<li data-target="#{{ functionName }}" data-slide-to="' + i.toString() + '" class="' + active + '"></li>';
+            indicator = `<button type="button" data-bs-target="#{{ functionName }}" data-bs-slide-to="${i.toString()}" ${ i == 0 ? 'class="active" aria-current="true" ' : '' }aria-label="Slide ${i.toString()}"></button>`;
             // create slide
-            slide = '<div class="carousel-item py-2 ' + active +'"><img class="d-block h-100 mx-auto lazyload" alt="image highlight" data-src="' + itemImg + '"> <div class="carousel-caption"><h5 class="carousel-item-title text-white py-2">' + carouselItems[i]["title"] + '</h5><a href="' + itemLink + '" class="btn btn-sm btn-{{ btn-color }}">{{ btn-text }}</a></div></div>';
+            slide = `<div class="carousel-item py-2${ i == 0 ? ' active' : '' }">
+            <img class="d-block h-100 mx-auto lazyload" alt="image highlight" data-src="${itemImg}">
+            <div class="carousel-caption">
+                <h5 class="carousel-item-title text-white py-2">${carouselItems[i]["title"]}</h5>
+                <a href="${itemLink}" class="btn btn-sm btn-{{ btn-color }}">{{ btn-text }}</a>
+            </div></div>`;
             slides += slide;
             indicators += indicator;
         }

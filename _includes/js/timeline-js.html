@@ -1,36 +1,51 @@
+{%- if site.data.theme.icons -%}{% assign icons = site.data.theme.icons %}{% else %}
+{% assign cb_icons = site.pages | where: "name","cb-icons.svg" | first %}
+{% assign icons = cb_icons.icons %}{%- endif -%}
 <script>
-
-function makeTimelineRow(year) {
-    var yearRow = '<tr id="'+ year +'"><th><h3>' + year +'</h3></th><td><div class="row"></div></td></tr>';
-    return yearRow;
-}
 
 function makeCard(obj) {
     // find images and link
     // find item link
-    var itemHref = "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.objectid;
+    var itemHref = `{{ '/item.html' | relative_url }}?id=${obj.objectid}`;
     // find images
     var thumbSrc;
     // add images or thumb for objects based on format
-    if(obj.youtube) {
-        thumbSrc = 'https://img.youtube.com/vi/' + obj.youtube + '/hqdefault.jpg';
+    if(obj.youtubeid) {
+        thumbSrc = 'https://img.youtube.com/vi/' + obj.youtubeid + '/hqdefault.jpg';
     } else if (obj.format.includes("image")) {
-        if(obj.filename.includes("/")) { thumbSrc = obj.filename; } else { thumbSrc = "{{ '/objects/' | relative_url }}" + obj.filename; }
+        if(obj.filename.includes("/")) { 
+            thumbSrc = obj.filename; 
+        } else { 
+            thumbSrc = "{{ '/objects/' | relative_url }}" + obj.filename; 
+        }
     } else if (obj.format.includes("audio")) {
-        thumbSrc = '{{ "/assets/img/audio.svg" | relative_url }}';
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-audio }}.svg';
     } else if (obj.format.includes("video")) {
-        thumbSrc = '{{ "/assets/img/video.svg" | relative_url }}';  
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-video }}.svg';  
     } else if (obj.format.includes("pdf")) {
-        thumbSrc = '{{ "/assets/img/pdf.svg" | relative_url }}';
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-pdf }}.svg';
     } else {
-        thumbSrc = '{{ "/assets/img/file.svg" | relative_url }}';
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-default }}.svg';
     }  
-    // start card
-    if (obj.format.includes("image")){
-        var card = '<div class="col-lg-4 col-md-6"><a class="d-inline-block m-1" href="' + itemHref + '" data-toggle="tooltip" data-placement="bottom" title="" data-original-title="' + obj.title + '"> <img class="lazyload img-thumbnail" src="' + thumbSrc + '" alt="Image of ' + obj.title + '" ></a></div>';
+    // create card based on type
+    if (obj.youtubeid || obj.format.includes("image")){
+        var card = `<div class="col-lg-4 col-md-6">
+            <a href="${itemHref}">
+                <img class="lazyload img-thumbnail" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="${thumbSrc}" alt="${obj.title}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${obj.title} | ${obj.date}">
+            </a>
+            </div>`;
     }
     else {
-        var card = '<div class="col-lg-4 col-md-6"><div class="card"><div class="card-body text-center"><div class="h5 text-dark">' + obj.title + '</div><a class="stretched-link" href="' + itemHref +'"><img class="lazyload img-thumbnail w-50" src="" data-src="' + thumbSrc + '" alt="Image of ' + obj.title + '"></a></div></div></div>';
+        var card = `<div class="col-lg-4 col-md-6">
+            <a href="${itemHref}">
+                <div class="card"> 
+                    <div class="card-body text-center">
+                        <h4 class="card-title text-dark">${obj.title}</h4>
+                        <img class="lazyload w-50" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="${thumbSrc}" alt="filetype thumbnail">
+                    </div>
+                </div>
+            </a>
+            </div>`;
     }
     return card;
 }
@@ -52,10 +67,7 @@ function pageInit(items) {
     // find unique years 
     unique_years = clean_years.filter(function(value, index, self) { return self.indexOf(value) === index; }).sort((a, b) => a - b);
 
-    $("#firstYear").html(unique_years[0]);
-    $("#firstYear").attr("href", "#" + unique_years[0]);
-    $("#lastYear").html(unique_years[unique_years.length - 1]);
-    $("#lastYear").attr("href", "#" + unique_years[unique_years.length - 1]);
+    document.getElementById("yearRange").innerHTML = `<a href="#y${ unique_years[0] }">${ unique_years[0] }</a> to <a href="#y${ unique_years[unique_years.length - 1] }">${ unique_years[unique_years.length - 1] }</a>`;
 
     // figure out navYears 
     var dropYears = "";
@@ -71,38 +83,38 @@ function pageInit(items) {
     }
     {% endif %}
     for (var i = 0; i < navYears.length; i++){
-        dropYears += '<a class="dropdown-item" href="#' + navYears[i] + '">' + navYears[i] + '</a>';
+        dropYears += '<a class="dropdown-item" href="#y' + navYears[i] + '">' + navYears[i] + '</a>';
     }
-    $("#navDropYears").append(dropYears);
+    // add nav years dropdown
+    document.getElementById("navDropYears").innerHTML = dropYears;
     
     // add navYears to page
+    var yearTable = "";
     // iterate over unique years 
     for (var i = 0; i < unique_years.length; i++) {
         var years = "";
-        years = makeTimelineRow(unique_years[i]);
-        $("#timeline").append(years);
-        // find related items by date
-        for (var item = 0; item < items.length; item++) {
-            var object = items[item];
-            if (object.date.includes("/")) {
-                var objYear = object.date.slice(object.date.length - 4);
-            }
-            else {
-                var objYear = object.date.slice(0,4);
-            }
-            var cards = "";
-            if (objYear == unique_years[i] ){
-            cards += makeCard(object);
-            }
-            $("#" + unique_years[i] + " td .row").append(cards);
-        }
+        // find items for the year
+        var yearItems = items.filter(item => item.date.includes(unique_years[i]));
+        // create cards for each
+        var yearItemCards = "";
+        yearItems.forEach((item) => { yearItemCards += makeCard(item); });
+        // create table row for year
+        var yearRow = `<tr id="y${unique_years[i]}"><th><h3>${unique_years[i]}</h3></th><td><div class="row">${yearItemCards}</div></td></tr>`;
+        // add to var
+        yearTable += yearRow;
     }
+    document.getElementById("timelineBody").innerHTML = yearTable;
+
     // init bootstrap tooltips
-    $('[data-toggle="tooltip"]').tooltip()
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
     // highlight year if hash
     if(window.location.hash) {
         var hashfilter = decodeURIComponent(location.hash.substr(1));
-        $("tr#" + hashfilter).addClass("bg-info");
+        document.querySelector("tr#" + hashfilter).classList.add("bg-info");
     }
 }
 

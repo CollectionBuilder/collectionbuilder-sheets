@@ -1,9 +1,10 @@
 ---
+# "Timeline" page
 layout: page
 custom-foot: js/timeline-js.html
 ---
-<div class="dropdown float-right" id="year-nav">
-    <button class="btn btn-info dropdown-toggle" type="button" id="yearButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+<div class="dropdown float-end" id="year-nav">
+    <button class="btn btn-primary dropdown-toggle" type="button" id="yearButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
         Year
     </button>
     <div class="dropdown-menu" aria-labelledby="yearButton" id="navDropYears">
@@ -12,10 +13,10 @@ custom-foot: js/timeline-js.html
 
 {{ content }}
 
-<h3><a href="" id="firstYear"> </a> to <a href="" id="lastYear"></a></h3>
+<h3 id="yearRange"></h3>
 
 <table id="timeline" class="table table-striped">
-   <tbody>
+   <tbody id="timelineBody">
        
    </tbody>
 </table>
