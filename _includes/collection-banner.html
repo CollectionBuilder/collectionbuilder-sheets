@@ -1,7 +1,8 @@
 {% if page.layout == "home-infographic" and site.data.theme.featured-image %}
 <style>
 #home-banner {
-    background-image: url('{% include image/featured-image.html %}');
+    {% if site.data.theme.featured-image contains '/' %}
+    background-image: url('{{ site.data.theme.featured-image | relative_url }}');{% endif %}
     background-size: cover;
     background-repeat: no-repeat;
     background-position: {{ site.data.theme.home-banner-image-position | default: 'center' }};
@@ -28,10 +29,33 @@
         </div>
         {% unless site.data.theme.featured-image contains '/' %}
         <div class="position-absolute bottom-0 end-0 px-2 bg-dark bg-opacity-75">
-            <a class="text-white fs-6" href="{{ site.data.theme.featured-image | prepend: '/item.html?id=' | relative_url }}" title="{{ featuredItem.title | escape }}">Featured Image</a>
+            <a class="text-white fs-6" href="{{ site.data.theme.featured-image | prepend: '/item.html?id=' | relative_url }}">Featured Image</a>
         </div>{% endunless %}
     </div>
 </div>
+{% unless site.data.theme.featured-image contains '/' %}
+<script> 
+// set up featured image
+var featuredImage = function (cb_items) {
+    // find item by objectid 
+    var featuredItem = cb_items.find(item => item.objectid == "{{ site.data.theme.featured-image }}");
+    if (featuredItem.youtubeid) {
+        var bgUrl = "url('https://img.youtube.com/vi/" + featuredItem.youtubeid + "/maxresdefault.jpg')";
+    } else if (featuredItem.filename.includes("/")) {
+        var bgUrl = "url('" + featuredItem.filename + "')";
+    } else {
+        var bgUrl = "url('{{ '/objects/' | relative_url }}" + featuredItem.filename + "')";
+    }
+    document.getElementById("home-banner").style.backgroundImage = bgUrl;
+}
+// add feature function to includeFunctions array
+if(includeFunctions) {
+    includeFunctions.push(featuredImage);
+} else {
+    var includeFunctions = [featuredImage];
+}
+</script>
+{% endunless %}
 {%- else -%}
 <div class="container">
     <div class="row align-items-center">
