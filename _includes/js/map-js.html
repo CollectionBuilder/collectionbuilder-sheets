@@ -62,7 +62,14 @@ function createMap(geodata) {
     var options = {
         title: 'Search Map Items',
         locationholder: 'Search map items...',
-        threshold: {{ site.data.theme.map-search-fuzziness | default: 0.35 }} 
+        threshold: {{ site.data.theme.map-search-fuzziness | default: 0.35 }},
+        showResultFct: function(feature, container) {
+            var result = `<strong>${feature.properties.title}</strong><br>`;
+            {% for f in fields %}
+            if(feature.properties[{{ f.field | jsonify }}]) { result += feature.properties[{{ f.field | jsonify }}] + `<br>`; }
+            {% endfor %}
+            container.innerHTML = result;
+        }
     };
     var searchCtrl = L.control.fuseSearch(options);
     searchCtrl.addTo(map);
@@ -143,6 +150,9 @@ function pageInit(cb_items) {
             "geometry": { "type":"Point", "coordinates": [ items[i].longitude, items[i].latitude ] }
         };
         feature.properties = items[i];
+        // remove undefined and null metadata values
+        Object.keys(feature.properties).forEach(key => feature.properties[key] === undefined || feature.properties[key] == "" && delete feature.properties[key]);
+        // add to geodata
         geodata.features.push(feature);
     }
     createMap(geodata);
