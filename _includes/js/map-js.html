@@ -143,6 +143,9 @@ function pageInit(cb_items) {
             "geometry": { "type":"Point", "coordinates": [ items[i].longitude, items[i].latitude ] }
         };
         feature.properties = items[i];
+        // remove undefined and null metadata values
+        Object.keys(feature.properties).forEach(key => feature.properties[key] === undefined || feature.properties[key] == "" && delete feature.properties[key]);
+        // add to geodata
         geodata.features.push(feature);
     }
     createMap(geodata);
