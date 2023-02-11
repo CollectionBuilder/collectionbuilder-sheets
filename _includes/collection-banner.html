@@ -39,14 +39,16 @@
 var featuredImage = function (cb_items) {
     // find item by objectid 
     var featuredItem = cb_items.find(item => item.objectid == "{{ site.data.theme.featured-image }}");
-    if (featuredItem.youtubeid) {
-        var bgUrl = "url('https://img.youtube.com/vi/" + featuredItem.youtubeid + "/maxresdefault.jpg')";
-    } else if (featuredItem.filename.includes("/")) {
-        var bgUrl = "url('" + featuredItem.filename + "')";
-    } else {
-        var bgUrl = "url('{{ '/objects/' | relative_url }}" + featuredItem.filename + "')";
+    if (featuredItem) {
+        if (featuredItem.youtubeid) {
+            var bgUrl = "url('https://img.youtube.com/vi/" + featuredItem.youtubeid + "/maxresdefault.jpg')";
+        } else if (featuredItem.filename.includes("/")) {
+            var bgUrl = "url('" + featuredItem.filename + "')";
+        } else {
+            var bgUrl = "url('{{ '/objects/' | relative_url }}" + featuredItem.filename + "')";
+        }
+        document.getElementById("home-banner").style.backgroundImage = bgUrl;
     }
-    document.getElementById("home-banner").style.backgroundImage = bgUrl;
 }
 // add feature function to includeFunctions array
 if(includeFunctions) {
