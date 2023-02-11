@@ -15,19 +15,15 @@
     Note: if using a YouTube item and an error image appears, the video may not have a "maxresdefault" image available. Replace "maxresdefault.jpg" in the code below with "hqdefault.jpg"
 
 {%- endcomment -%}
+{% assign functionName = "" %}
 {% assign jumbo_div_id = "j-" | append: include.objectid | slugify | truncate: 12, "" %}
 {% assign jumboId = include.objectid | default: site.data.theme.featured-image %}
 {% if jumboId contains '/' %}
 {% assign jumboSrc = jumboId | relative_url %}
 {% else %}
-{% assign jumboItem = site.data[site.metadata] | where: "objectid", jumboId | first %}
-{% if jumboItem.youtubeid %}
-{% assign jumboSrc = 'https://img.youtube.com/vi/' | append: jumboItem.youtubeid | append: '/maxresdefault.jpg' %}
-{% elsif jumboItem.filename contains '/' %}
-{% assign jumboSrc = jumboItem.filename | relative_url %}
-{% else %}
-{% assign jumboSrc = jumboItem.filename | prepend: '/objects/' | relative_url %}
-{%- endif -%}
+{% capture jumboSrc %}{% endcapture %}
+{% capture functionName %}jumbotron_feature_{{ include.objectid | slugify | replace: "-","_" }}{% endcapture %}
+
 {%- endif -%}
 
 <style>
@@ -38,7 +34,7 @@
     border-radius: 0.3rem;
 }   
 #{{ jumbo_div_id }} {
-    background-image: url({{ jumboSrc }});
+    {% if jumboSrc %}background-image: url({{ jumboSrc }});{% endif %}
     background-size: cover;
     background-repeat: no-repeat;
     background-position: {{ include.position | default: 'center' }};
@@ -66,3 +62,34 @@
         {% endunless %}
     </div>
 </div>
+{% if functionName != '' %}
+<script> 
+// set up jumbotron image
+var {{ functionName }} = function (cb_items) {
+    // find item by objectid 
+    var record = cb_items.find(item => item.objectid == {{ include.objectid | jsonify }});
+    if (record) {
+        if (record.youtubeid) {
+            var bgUrl = "url('https://img.youtube.com/vi/" + record.youtubeid + "/maxresdefault.jpg')";
+        } else if (record.filename.includes("/")) {
+            var bgUrl = "url('" + record.filename + "')";
+        } else {
+            var bgUrl = "url('{{ '/objects/' | relative_url }}" + record.filename + "')";
+        }
+        document.getElementById("{{ jumbo_div_id }}").style.backgroundImage = bgUrl;
+    } else {
+        // message if objectid doesn't exist
+        console.log("Issue with jumbotron include: objectid {{ include.objectid }} does not exist.");
+        document.querySelector("#{{ jumbo_div_id }}").innerHTML= "<span class='text-danger'>Problem with this jumbotron include: objectid {{ include.objectid }} does not exist.</span>";
+    }
+};
+
+// add feature function to includeFunctions array
+if(includeFunctions) {
+    includeFunctions.push({{ functionName }});
+} else {
+    var includeFunctions = [{{ functionName }}];
+}
+
+</script>
+{% endif %}
