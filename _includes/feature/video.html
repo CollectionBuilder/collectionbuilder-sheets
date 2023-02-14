@@ -22,6 +22,7 @@
     Note: if you have issues make sure the item is a video item and a web friendly format
 
 {%- endcomment -%}
+{% assign functionName = "" %}
 {%- if include.objectid contains '/' -%}
     {% capture video_caption %}{{ include.caption }}{% endcapture %}
     {% if include.objectid contains 'vimeo' %}
@@ -35,22 +36,15 @@
     {% else %}
     {% assign video_src = include.objectid | relative_url %}
     {% endif %}
+    {% assign video_link = include.objectid %}
 {%- else -%}
-    {%- assign item = site.data[site.metadata] | where: "objectid", include.objectid | first -%}
-    {% capture video_caption %}{% if include.caption %}{{ include.caption }}{% else %}<a href="{{ '/item.html?id=' | append: item.objectid | relative_url }}">{{ item.title }}</a>{% endif %}{% endcapture %}
-    {% if item.vimeoid %}
-    {% assign vimeo_id = item.vimeoid %}
-    {% capture video_src %}https://player.vimeo.com/video/{{ vimeo_id }}{% endcapture %}
-    {%- elsif item.youtubeid -%}
-    {% assign youtube_id = item.youtubeid %}
-    {% capture video_src %}https://www.youtube-nocookie.com/embed/{{ youtube_id }}?rel=0&modestbranding=1{% endcapture %}
-    {% else %}
-    {%- capture video_src -%}{% if  item.filename contains '/' %}{{ item.filename | relative_url }}{% else %}{{ '/objects/' | append: item.filename | relative_url }}{% endif %}{% endcapture %}
-    {% endif %}
+    {%- capture video_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: include.objectid }}{%- endcapture -%}
+    {% capture functionName %}video_feature_{{ include.objectid | slugify | replace: "-","_" }}{% endcapture %}    
 {%- endif -%}
 <div class="text-center my-4">
     <figure class="mx-auto{% if include.width %} feature-w-{{ include.width }}{% endif %}">
-        <div class="ratio ratio-{{ include.ratio | default: '16x9' }}">
+        <div class="ratio ratio-{{ include.ratio | default: '16x9' }}" {% if functionName != '' %}id="{{ functionName }}"{% endif %}>
+            {% if functionName == '' %}
             {%- if video_src contains "vimeo" or video_src contains "youtu" -%}
             <iframe title="embedded video {{ video_caption | escape }}" src="{{ video_src }}" allowfullscreen></iframe>
             {% else %}
@@ -59,11 +53,59 @@
                 Your browser does not support the video tag.
             </video>
             {%- endif -%}
+            {% endif %}
         </div>
         {% unless include.caption == false %}
-        <figcaption class="figure-caption">
-            {{video_caption }}
+        <figcaption class="figure-caption" {% if functionName != '' %}id="{{ functionName }}Caption"{% endif %}>
+            <a href="{{ video_link }}">{{ video_caption | default: 'Link to Video' }}</a>
         </figcaption>
         {% endunless %}
     </figure>
 </div>
+{% if functionName != '' %}
+<script>
+// set up feature function as variable
+var {{ functionName }} = function (cb_items) { 
+    // find item
+    var record = cb_items.find(item => item.objectid == {{ include.objectid | jsonify }});
+    if (record) {
+        // set up video embed
+        if (record.vimeoid) {
+            var video_embed = `<iframe title="embedded video ${ record.title }" src="https://player.vimeo.com/video/${ record.vimeoid }" allowfullscreen></iframe>`;
+        } else if (record.youtubeid) {
+            var video_embed = `<iframe title="embedded video ${ record.title }" src="https://www.youtube-nocookie.com/embed/${ record.youtubeid }?rel=0&modestbranding=1" allowfullscreen></iframe>`;
+        } else if (record.filename.includes("/")) {
+            var video_embed = `<video width="320" height="240" controls>
+                                    <source src="${ record.filename }">
+                                    Your browser does not support the video tag.
+                                </video>`;
+        } else {
+            var video_embed =   `<video width="320" height="240" controls>
+                                    <source src="{{ '/objects/' | relative_url }}${ record.filename }">
+                                    Your browser does not support the video tag.
+                                </video>`;
+        }
+        // add embed
+        document.querySelector("#{{ functionName }}").innerHTML = video_embed;
+
+        {% unless include.caption or include.caption == false %}
+        // add caption
+        document.querySelector("#{{ functionName }}Caption a").innerHTML = record.title;
+        {% endunless %}
+    } else {
+        // message if objectid doesn't exist
+        console.log("Issue with video include: objectid {{ include.objectid }} does not exist.");
+        document.querySelector("#{{ functionName }}").innerHTML= "<span class='text-danger'>Problem with this video include: objectid {{ include.objectid }} does not exist.</span>";
+    }
+
+};
+
+// add feature function to includeFunctions array
+if(includeFunctions) {
+    includeFunctions.push({{ functionName }});
+} else {
+    var includeFunctions = [{{ functionName }}];
+}
+
+</script>
+{% endif %}
