@@ -18,14 +18,95 @@
 
 <div id='timeline-embed' style="width: 100%; height: 800px" class="mb-4"></div>
 
-<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+<script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline-min.js"></script>
 <script type="text/javascript">
-    // The TL.Timeline constructor takes at least two arguments:
-    // the id of the Timeline container (no '#'), and
-    // the URL to your JSON data file or Google spreadsheet.
-    // the id must refer to an element "above" this code,
-    // and the element must have CSS styling to give it width and height
-    // optionally, a third argument with configuration options can be passed.
-    // See below for more about options.
-    timeline = new TL.Timeline('timeline-embed', '{{ json }}');
+    {% unless include.json %}
+var timelineEvents = {
+    {% if title %}
+    /* add title slide */
+    "title": {
+        {% if title['Media'] %}"media": {
+            {% if title['Media Caption'] %}"caption": {{ title['Media Caption'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }},{% endif %}
+            {% if title['Media Credit'] %}"credit": {{ title['Media Credit'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }},{% endif %}
+            "url": "{{ title['Media'] | relative_url }}"
+        },{% endif %}
+        "text": {
+            "headline": {{ title['Headline'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }}{% if title['Text'] %},
+            "text": {{ title['Text'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }}{% endif %}
+        }
+    },
+    {%- endif -%}
+    {% if eras != empty %}
+    "eras": [ //start_date end_date text
+        {% for era in eras %}{
+            "text": {
+                "headline": {{ era['Headline'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }}{% if era['Text'] %},
+                "text": {{ era['Text'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }}{% endif %}
+            },
+            "end_date": { 
+                {% if era['End Time'] %}{% assign end_time = era['End Time'] | split: ':' %}
+                // End Time
+                "hour": "{{ end_time[0] }}", "minute": "{{ end_time[1] }}",{% if end_time[2] %} "second": "{{ end_time[2] }}",{% endif %}{%- endif -%}
+                // End Month,End Day,End Year
+                {% if era['End Month'] %}"month": "{{ era['Month'] }}",{% endif %}
+                {% if era['End Day'] %}"day": "{{ era['Day'] }}",{% endif %}
+                "year": "{{ era['End Year'] }}"
+            },
+            "start_date": { 
+                {% if era['Time'] %}{% assign time = era['Time'] | split: ':' %}
+                // Time
+                "hour": "{{ time[0] }}", "minute": "{{ time[1] }}",{% if time[2] %} "second": "{{ time[2] }}",{% endif %}{%- endif -%}
+                // Month,Day,Year
+                {% if era['Month'] %}"month": "{{ era['Month'] }}",{% endif %}
+                {% if era['Day'] %}"day": "{{ era['Day'] }}",{% endif %}
+                "year": "{{ era['Year'] }}"
+            }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+    ],{%- endif -%}
+    "events": [
+        {% for event in events %}{
+            {% if event['Media'] %}"media": {
+                // Media,Media Credit,Media Caption,Media Thumbnail
+                "caption": {{ event['Media Caption'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }},
+                "credit": {{ event['Media Credit'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }},
+                {% if event['Media Thumbnail'] %}"thumbnail": {{ event['Media Thumbnail'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }},{% endif %}
+                "url": {% if event['Media'] contains 'http' %}{{ event['Media'] | jsonify }}{% else %}{{ '/media/' | append: event['Media'] | relative_url | jsonify }}{% endif %}
+            },{% endif %}
+            "text": {
+                //Headline,Text
+                "headline": {{ event['Headline'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }}{% if event['Text'] %},
+                "text": {{ event['Text'] | markdownify | remove: '<p>' | remove: '</p>' | jsonify }}{% endif %}
+            },
+            {% if event['Background'] %}"background": {{ event['Background'] | jsonify }},{% endif %}
+            {% if event['Group'] %}"group": {{ event['Group'] | jsonify }},{% endif %}
+            {% if event['Display Date'] %}"display_date": {{ event['Display Date'] | jsonify }},{% endif %}
+            {% if event['End Year'] %}"end_date": { 
+                {% if event['End Time'] %}{% assign end_time = event['End Time'] | split: ':' %}
+                // End Time
+                "hour": "{{ end_time[0] }}", "minute": "{{ end_time[1] }}",{% if end_time[2] %} "second": "{{ end_time[2] }}",{% endif %}{%- endif -%}
+                // End Month,End Day,End Year
+                {% if event['End Month'] %}"month": "{{ event['Month'] }}",{% endif %}
+                {% if event['End Day'] %}"day": "{{ event['Day'] }}",{% endif %}
+                "year": "{{ event['End Year'] }}"
+            },{% endif %}
+            "start_date": { 
+                {% if event['Time'] %}{% assign time = event['Time'] | split: ':' %}
+                // Time
+                "hour": "{{ time[0] }}", "minute": "{{ time[1] }}",{% if time[2] %} "second": "{{ time[2] }}",{% endif %}{%- endif -%}
+                // Month,Day,Year
+                {% if event['Month'] %}"month": "{{ event['Month'] }}",{% endif %}
+                {% if event['Day'] %}"day": "{{ event['Day'] }}",{% endif %}
+                "year": "{{ event['Year'] }}"
+            }
+        }{% unless forloop.last %},{% endunless %}
+        {% endfor %}
+    ]
+};
+{% endunless %}
+
+/* init timeline */
+{% if page.timeline-options %}var timelineOptions = {{ page.timeline-options | jsonify }};{% endif %}
+timeline = new TL.Timeline("timeline-embed", timelineEvents{% if page.timeline-options %}, timelineOptions{% endif %});
+
 </script>
