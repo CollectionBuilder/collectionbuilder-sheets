@@ -22,7 +22,8 @@ if(includeFunctions) {
 ```
 
 Finally, in the custom-foot for the page that contains feature includes, iterate over the `includeFunctions` array inside of the `pageInit` function to ensure the metadata has been loaded and can be passed to the features to activate them.
-Use this snippet:
+This can be added using the option `custom-foot: js/includes-js.html`.
+Alternatively, use this snippet:
 
 ```
 function pageInit(items) {
@@ -30,11 +31,15 @@ function pageInit(items) {
     if(includeFunctions) { 
         // iterate over functions and init
         for (var i = 0; i < includeFunctions.length; ++i) {
-            includeFunctions[i](items);
+            try { 
+                includeFunctions[i](items);
+            } catch (error) {
+                console.log("Issue with include function: " + includeFunctions[i]); 
+                console.error(error);
+            }
         }
     }
 }
-
 // add metadata
 {% include js/cb-items.js %}
 ```
