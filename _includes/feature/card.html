@@ -52,11 +52,7 @@ var {{ functionName }} = function (cb_items) {
 };
 
 // add feature function to includeFunctions array
-if(includeFunctions) {
-    includeFunctions.push({{ functionName }});
-} else {
-    var includeFunctions = [{{ functionName }}];
-}
+includeFunctions.push({{ functionName }});
 
 </script>
 {% endif %}

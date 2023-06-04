@@ -8,22 +8,20 @@ In the foot that array of functions is called, after the metadata is loaded, pas
 
 To make this work:
 
+- the head includes an array, `var includeFunctions = [ ];` to which include functions will be added
 - each feature include should generate a unique(ish) js function name based on something passed to the include. e.g. `{% capture functionName %}featured_terms_{{ include.field | slugify | replace: "-","_" }}{% endcapture %}`
 - the function must be set up as a variable, to which will be passed the full metadata object. e.g. `var {{ functionName }} = function (cb_items) { ...`
 - after the function is defined, the variable name must be added to the `includeFunctions` array. Use the snippet below:
 
 ```
 // add feature function to includeFunctions array
-if(includeFunctions) {
-    includeFunctions.push({{ functionName }});
-} else {
-    var includeFunctions = [{{ functionName }}];
-}
+includeFunctions.push({{ functionName }});
+
 ```
 
-Finally, in the custom-foot for the page that contains feature includes, iterate over the `includeFunctions` array inside of the `pageInit` function to ensure the metadata has been loaded and can be passed to the features to activate them.
-This can be added using the option `custom-foot: js/includes-js.html`.
-Alternatively, use this snippet:
+Finally, the default layout will have "js/includes-js.html" in the foot, which will iterate over the `includeFunctions` array inside of the `pageInit` function to ensure the metadata has been loaded and can be passed to the features to activate them.
+You don't need to add anything if using any default layout! 
+"js/includes-js.html" uses this snippet:
 
 ```
 function pageInit(items) {
