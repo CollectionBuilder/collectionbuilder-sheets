@@ -138,21 +138,22 @@ function filterItems(arr,q) {
 };
 
 /* function to init browse after loading items */ 
-function pageInit(items) {
+var browsePageInit = function (cb_items) {
   /* randomize items once at page load */
-  shuffle(items);
+  shuffle(cb_items);
   /* filter if hash in initial URL */
   if(window.location.hash) {
     query = decodeURIComponent(location.hash.substr(1));
     filterTextBox.value = query;
-    filterItems(items,query);
+    filterItems(cb_items,query);
   } else {
     query = "";
-    filterItems(items,query);
+    filterItems(cb_items,query);
   }
 }
 
-{% include js/cb-items.js %}
+// add feature function to includeFunctions array
+includeFunctions.push(browsePageInit);
 
 /* filter form */
 function submitFilter() {

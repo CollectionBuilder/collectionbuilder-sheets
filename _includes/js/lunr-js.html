@@ -56,7 +56,7 @@ function createIndex(cb_items) {
 
 
 /* page init function */
-function pageInit(cb_items) {
+var  searchPageInit = function (cb_items) {
   // set up item store
   for (var item in cb_items) {
     {% for f in index_fields %}
@@ -77,6 +77,7 @@ function pageInit(cb_items) {
 /* varibles for page */
 var idx;
 
-{% include js/cb-items.js %}
+// add feature function to includeFunctions array
+includeFunctions.push(searchPageInit);
 
 </script>

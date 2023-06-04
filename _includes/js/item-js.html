@@ -114,31 +114,31 @@ function displayItem(record, prev_id, next_id) {
     {%- endif -%}
 }
 
-/* function to init page after loading items */
-function pageInit(items) {
+/* function to init page after loading cb_items */
+var itemPageInit = function (cb_items) {
 
     /* get query id from URL */
     var queryString = window.location.search.substring(1).split("=")[1];
     /* find related item by objectid */
-    var record_index = items.findIndex(item => item.objectid == queryString); 
+    var record_index = cb_items.findIndex(item => item.objectid == queryString); 
 
     // display if item exists
     if (record_index != -1) {
         {% if site.data.theme.browse-buttons == true %}
         // find next and previous record
-        var last = items.length - 1;
+        var last = cb_items.length - 1;
         var prev_id, next_id;
         if (record_index === 0) {
-            prev_id = items[last].objectid;
+            prev_id = cb_items[last].objectid;
         } else { 
-            prev_id = items[record_index - 1].objectid;
+            prev_id = cb_items[record_index - 1].objectid;
         }
         if (record_index === last) {
-            next_id = items[0].objectid;
+            next_id = cb_items[0].objectid;
         } else {
-            next_id = items[record_index + 1].objectid;
+            next_id = cb_items[record_index + 1].objectid;
         }{% endif %}
-        displayItem(items[record_index], prev_id, next_id);
+        displayItem(cb_items[record_index], prev_id, next_id);
     } else {
         /* no item with that ID */
         document.getElementById("bc-title").innerHTML = 'Not found?';
@@ -148,6 +148,7 @@ function pageInit(items) {
     document.getElementById("loading").style.display = "none";
 }
 
-{% include js/cb-items.js %}
+// add feature function to includeFunctions array
+includeFunctions.push(itemPageInit);
 
 </script>

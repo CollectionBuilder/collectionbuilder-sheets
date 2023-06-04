@@ -140,7 +140,7 @@ function objectMarkers(feature,latlng) {
 // set up geodata var
 var geodata = { "type": "FeatureCollection", "features": [ ] };
 /* prep metadata */
-function pageInit(cb_items) {
+var mapPageInit = function (cb_items) {
     // filter out no lat long
     var items = cb_items.filter(function(item) { return item.latitude && item.longitude; });
     // get configured fields
@@ -158,6 +158,7 @@ function pageInit(cb_items) {
     createMap(geodata);
 }
 
-{% include js/cb-items.js %}
+// add feature function to includeFunctions array
+includeFunctions.push(mapPageInit);
 
 </script>
