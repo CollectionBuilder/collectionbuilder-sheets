@@ -1,11 +1,26 @@
 ---
 # Term cloud layout
-# used by default subjects and location page
-# can be used for any metadata field cloud
+# used by default Subjects and Location page to simplify configuration of the feature/cloud.html include.
+# can be used for any metadata field cloud on other pages by adding front matter to the page stub.
+# page using layout should have front matter setting "cloud-fields"
+# all other cloud feature include options are supported by adding "cloud-" in front of option in front matter.
 layout: page
-custom-foot: js/cloud-js.html
 ---
 
 {{ content }}
 
-<div id="cloud-{{ page.cloud-fields | slugify }}" class="text-center my-4 bg-{{ page.background | default: 'light' }} border rounded p-2"></div>
+{%- if page.cloud-fields == "site.data.theme.subjects-fields" -%}
+    {% assign fields = site.data.theme.subjects-fields %}
+    {% assign min = site.data.theme.subjects-min | default: 1 %}
+    {% assign stopwords = site.data.theme.subjects-stopwords %}
+{%- elsif page.cloud-fields == "site.data.theme.locations-fields" -%}
+    {% assign fields = site.data.theme.locations-fields %}
+    {% assign min = site.data.theme.locations-min | default: 1 %}
+    {% assign stopwords = site.data.theme.locations-stopwords %}
+{%- else -%}
+    {% assign fields = page.cloud-fields | default: "subjects" %}
+    {% assign min = page.cloud-min | default: 1 %}
+    {% assign stopwords = page.cloud-stopwords %}
+{%- endif -%}
+{% include feature/cloud.html fields=fields min=min stopwords=stopwords shuffle=page.cloud-shuffle background=page.cloud-background button=page.cloud-button %}
+
