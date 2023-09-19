@@ -4,16 +4,17 @@
 <script type="text/javascript" language="javascript" src="{{ '/assets/lib/datatables/datatables.min.js' | relative_url }}"></script>
 <script>
 
-function pageInit(items) {
+/* function to init table after loading items */ 
+var tablePageInit = function (cb_items) {
     // set up data
     var table_data = [];
     // get configured fields
-    for (var i = 0; i < items.length; i++) {
+    for (var i = 0; i < cb_items.length; i++) {
         var row = [];
         {% for f in fields %}
-        if(items[i][{{ f | jsonify }}]) { row.push(items[i][{{ f | jsonify }}]); } else { row.push("n/a"); }
+        if(cb_items[i][{{ f | jsonify }}]) { row.push(cb_items[i][{{ f | jsonify }}]); } else { row.push("n/a"); }
         {% endfor %}
-        row.push("{{ '/item.html?id=' | relative_url }}" + items[i].objectid );
+        row.push("{{ '/item.html?id=' | relative_url }}" + cb_items[i].objectid );
         table_data.push(row);
     }
     // init datatables 
@@ -43,6 +44,7 @@ function pageInit(items) {
     });
 }
 
-{% include js/cb-items.js %}
+// add feature function to includeFunctions array
+includeFunctions.push(tablePageInit);
 
 </script>

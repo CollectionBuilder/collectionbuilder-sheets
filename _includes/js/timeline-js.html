@@ -50,17 +50,17 @@ function makeCard(obj) {
     return card;
 }
 
-function pageInit(items) {
+var timelinePageInit = function (cb_items) {
     // get dates from metadata and clean to years
     clean_years = [];
-    for (var i = 0; i < items.length; i++) {
-        if(items[i].date) { 
-            if(items[i].date.includes("-")) {
-                clean_years.push(items[i].date.trim().split("-")[0]);
-            } else if (items[i].date.includes("/")) {
-                clean_years.push(items[i].date.trim().split("/").reverse()[0]);
+    for (var i = 0; i < cb_items.length; i++) {
+        if(cb_items[i].date) { 
+            if(cb_items[i].date.includes("-")) {
+                clean_years.push(cb_items[i].date.trim().split("-")[0]);
+            } else if (cb_items[i].date.includes("/")) {
+                clean_years.push(cb_items[i].date.trim().split("/").reverse()[0]);
             } else {
-                clean_years.push(items[i].date.trim());
+                clean_years.push(cb_items[i].date.trim());
             }
         }
     }
@@ -94,7 +94,7 @@ function pageInit(items) {
     for (var i = 0; i < unique_years.length; i++) {
         var years = "";
         // find items for the year
-        var yearItems = items.filter(item => item.date.includes(unique_years[i]));
+        var yearItems = cb_items.filter(item => item.date.includes(unique_years[i]));
         // create cards for each
         var yearItemCards = "";
         yearItems.forEach((item) => { yearItemCards += makeCard(item); });
@@ -118,6 +118,7 @@ function pageInit(items) {
     }
 }
 
-{% include js/cb-items.js %}
+// add feature function to includeFunctions array
+includeFunctions.push(timelinePageInit);
 
 </script>
