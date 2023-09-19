@@ -23,8 +23,17 @@ function cbGetMetadata(metadata_url) {
     Papa.parse(metadata_url, {
         download: true,
         header: true,
+        // worker improves loading large files in background, but can't load on dev server
+        worker: true,
+        // step reads file line by line, slower but handles larger files
+        step: function(results, parser) {
+            if (results.data["objectid"]) { 
+                cb_items.push(results.data);
+            }
+            console.log("Row errors:", results.errors);
+        },
         complete: (results) => { 
-            cb_items = results.data.filter(item => item["objectid"]);
+            //cb_items = results.data.filter(item => item["objectid"]);
             sessionStorage.setItem("cb_items_store", JSON.stringify(cb_items));
             pageInit(cb_items);
         },
