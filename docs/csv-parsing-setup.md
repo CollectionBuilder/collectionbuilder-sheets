@@ -5,23 +5,46 @@ This is done using [PapaParse](https://www.papaparse.com/) to initially load and
 
 ## Page Setup
 
-To ensure the correct loading and parsing of metadata, all pages that consume metadata use a common setup convention and the "cb-items.js" include.
+Since CB-Sheets template does not have access to the metadata at build time, adding features to a page is a bit more complex than other templates. 
 
-To create visualizations each page uses a custom foot include generally specified in the front matter of the page's layout. 
-E.g. `custom-foot: js/browse-js.html`.
-The include should include three parts:
+To make it possible following a fairly simple approach that keeps the code close to other CB templates, all pages use a common setup convention where functions creating features anywhere on the page are added to an array named "includeFunctions".
 
-- self-contained JS functions to create the visualization.
-- a `pageInit` function that takes the input of the metadata object and triggers all the functions to create the page.
-- the "cb-items.js" include at the bottom of JS `{% include js/cb-items.js %}` (inside the script tag). 
+The head of every page ("_includes/head/head.html") includes an empty array variable "includeFunctions" that looks like:
 
-The "cb-items.js" include first checks the sessionStorage for existing metadata to see if it has already been loaded, and if not, uses PapaParse to load and parse the metadata CSV. 
-Once the metadata is loaded from CSV or sessionStorage, it will pass the "cb_items" object to the `pageInit` function (i.e. `pageInit(cb_items)`).
+```
+<script>
+    // include functions variable, necessary for Sheets pageinit to work! 
+    var includeFunctions = [ ]; 
+</script>
+```
+
+Feature and index includes will add html + a script tag to the page content.
+Visualizations will generally use a custom foot include specified in the front matter of the page's layout, e.g. `custom-foot: js/browse-js.html`.
+Both feature includes and visualization features are set up following the same conventions: 
+
+- each feature include or visualization include should generate a unique(ish) js function name based on something passed to the include. e.g. `{% capture functionName %}featured_terms_{{ include.field | slugify | replace: "-","_" }}{% endcapture %}` or `browsePageInit`.
+- the main function must be set up as a variable, to which will be passed the full metadata object to initiate the feature/visualization. e.g. `var {{ functionName }} = function (cb_items) { ...`
+- after the main function is defined, the variable name must be added to the "includeFunctions" array. Use the snippet below:
+
+```
+// add feature function to includeFunctions array
+includeFunctions.push({{ functionName }});
+
+```
+
+The foot of every page ("_includes/foot.html") includes "_includes/js/pageinit-js.html".
+This script loads and parses the metadata source (if necessary), then iterates through the "includeFunctions" array to pass the full metadata to each function set up on the page, triggering each feature to generate. 
+
+## pageinit-js 
+
+This include first checks the sessionStorage for existing metadata to see if it has already been loaded.
+If not, it passes the configured metadata value to PapaParse to load and parse the metadata CSV. 
+Once successfully parsed, the metadata is saved to sessionStorage, then the array of items is passed to the "pageInit" function which iterates through the functions added to "includeFunctions" array. 
 Since loading and parsing the CSV could take some time on the first initial load, it is important for the rest of the page's JS to wait for pageInit.
 
 ## cb_items Object
 
-Once parsed by PapaParse or pulled from sessionStorage, the metadata is passed to `pageInit` as a JS array of objects. 
+Once parsed by PapaParse or pulled from sessionStorage, the metadata is passed to the includeFunctions as a JS array of objects. 
 Each item is an object with keys matching each CSV field.
 It looks sometime like: 
 
