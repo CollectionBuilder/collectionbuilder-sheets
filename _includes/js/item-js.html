@@ -117,10 +117,11 @@ function displayItem(record, prev_id, next_id) {
 /* function to init page after loading cb_items */
 var itemPageInit = function (cb_items) {
 
-    /* get query id from URL */
-    var queryString = window.location.search.substring(1).split("=")[1];
+    /* get objectid from URL */
+    let url = new URL(window.location);
+    var itemId = url.searchParams.get('id');
     /* find related item by objectid */
-    var record_index = cb_items.findIndex(item => item.objectid == queryString); 
+    var record_index = cb_items.findIndex(item => item.objectid == itemId); 
 
     // display if item exists
     if (record_index != -1) {
