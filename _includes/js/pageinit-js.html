@@ -17,6 +17,9 @@ function pageInit(items) {
     }
 }
 
+
+
+
 /* function to retrieve metadata, parse, add to sessionStorage, and init page */ 
 function cbGetMetadata(metadata_url) {
     /* use papaparse to get metadata from configured CSV URL, then init page */
@@ -86,5 +89,98 @@ if (sessionStorage.getItem("cb_metadata_set")) {
 }
 {%- endif -%}
     
+
+function generateElement(dataSrc,dataCaption,dataAlt,dataWidth) {
+ // Find the corresponding item in the cb_items session store array
+ const selectedItem = cb_items.find((item) => item.objectid === dataSrc);
+
+ if (!selectedItem) {
+   return null; // Data source not found in the array
+ }
+
+ // Generate the appropriate HTML element based on the file extension
+ const fileExtension = selectedItem.filename.split('.').pop();
+ let element;
+ let testpiece = "/";
+ if (selectedItem.filename.includes(testpiece)){
+    var file = selectedItem.filename;
+ }else {
+    var file = "{{ '/objects/' | relative_url }}" + selectedItem.filename;
+ }
+ const relativeURL = `{{ '/item.html' | relative_url | append: '?id=' }}${selectedItem.objectid}`;
+
+
+        if (dataAlt) {
+            var alt = dataAlt;
+        } else{
+            var alt = selectedItem.title;
+        }
+        if (dataCaption) {
+            var caption = dataCaption;
+        } else{
+            var caption = selectedItem.title;
+        }
+        if (dataWidth) {
+            var width = dataWidth;
+        } else{
+            var width = "100";
+        }
+ 
+ const captionLink = `<a href="${relativeURL}" class="text-dark">${caption}</a>`;
+ 
+ switch (fileExtension.toLowerCase()) {
+   case 'jpg':
+   case 'jpeg':
+   case 'png':
+     element = `<div class="text-center"><figure class="figure mx-3 feature-w-${width}"><a href="${relativeURL}"><img class="img-fluid" src="${file}" alt="${alt}"></a><figcaption class="figure-caption text-center">${captionLink}</figurecaption></figure></div>`;
+     break;
+   case 'pdf':
+     element = `<div class="text-center"><figure class="figure border rounded p-1 feature-w-${width}"><div class="ratio ratio-1x1"><object aria-label="pdf embed of ${caption}" data="${file}" type="application/pdf">
+                <p>The PDF is not rendering in your browser. Please use the link below to download the PDF.</p></object></div>
+                <figcaption class="figure-caption text-center">${captionLink}</figcaption></figure>`;
+     break;
+   case 'mp3':
+     element = `<figure class="text-center my-3"><audio controls class="w-${width}"><source src="${file}" type="audio/mpeg"></audio><p><figcaption class="figure-caption text-center">${captionLink}</figcaption></figure>`;
+     break;
+   case 'mp4':
+   case 'webm':
+     element = `<figure class="text-center my-3"><video controls width="${width}%"><source src="${file}" type="video/mp4"></video><figcaption class="figure-caption text-center">${captionLink}</figcaption></figure>`;
+     break;
+   default:
+     element = 'Unsupported file type';
+ }
+
+ // Generate the link to the relative URL
+ 
+
+ // Wrap the element with the caption link
+ const finalElement = `${element}`;
+
+ return finalElement;
+}
+
+// Get all elements with class "include_command" and a data-src attribute
+const elements = document.querySelectorAll('.include_command[data-src]');
+
+// Iterate through the selected elements and generate content for each one
+elements.forEach((element) => {
+ const dataSrc = element.getAttribute('data-src');
+ const dataCaption = element.getAttribute('data-caption');
+ const dataAlt = element.getAttribute('data-alt');
+ const dataWidth = element.getAttribute('data-width');
+ const generatedElement = generateElement(dataSrc,dataCaption,dataAlt);
+
+ if (generatedElement) {
+   // Create a container for the generated element
+   const container = document.createElement('div');
+   container.className = 'col-md'; // You can style this class as needed
+
+   // Insert the generated HTML element into the container
+   container.innerHTML = generatedElement;
+
+   // Replace the original element with the container
+   element.parentNode.replaceChild(container, element);
+ }
+});
 </script>
     

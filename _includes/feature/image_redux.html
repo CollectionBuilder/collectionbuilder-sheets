@@ -31,19 +31,80 @@
         {%- capture item_caption -%}{{ captions[forloop.index0] | default: src }}{%- endcapture -%}
         {%- capture image_alt -%}{{ alts[forloop.index0] }}{%- endcapture -%}
         {%- capture image_link -%}{{ links[forloop.index0] | default: image_src }}{%- endcapture -%}
-        <div class="col-md text-center">
-            <figure class="figure mx-3{% if include.width %} feature-w-{{ include.width }}{% endif %}">
-                <a href="{{ image_link | default: image_src}}">
-                    <img class="figure-img img-fluid rounded lazyload" alt="{{ image_alt | default: image_caption | escape }}"  title="click to see item" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="{{ image_src }}" >
-                </a>
-                {% unless include.caption == false %}<figcaption class="figure-caption">{{ image_caption }}</figcaption>{% endunless %}
-            </figure>
-        </div>
+        
     {% else %}
-    {%- capture image_src -%}{{ i }}{%- endcapture -%}
+        {%- capture image_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: i }}{% endcapture %}
         {% if captions %}{%- capture image_caption -%}{{ captions[forloop.index0] }}{%- endcapture -%}{% endif %}
         {%- capture image_alt -%}{{ alts[forloop.index0] }}{%- endcapture -%}
-    <img class="include_command" data-src="{{ i }}" data-caption="{{ image_caption }}" data-alt="{{ image_alt }}" data-width="{{ include.width }}">
+        {% capture functionName %}image_feature_{{ i | slugify | replace: "-","_" }}{{forloop.index | times: forloop.length }}{% endcapture %}
     {% endif %}
-    {% endfor %}
+    <div class="col-md text-center">
+        <figure class="figure mx-3{% if include.width %} feature-w-{{ include.width }}{% endif %}">
+            {% if i contains "/" %}
+            <a href="{{ image_link | default: image_src}}">
+                <img class="figure-img img-fluid rounded lazyload" alt="{{ image_alt | default: image_caption | escape }}"  title="click to see item" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="{{ image_src }}" >
+            </a>
+            {% unless include.caption == false %}<figcaption class="figure-caption">{{ image_caption }}</figcaption>{% endunless %}
+            {% else %}
+            <a href="{{ image_link | default: image_src}}" {% if functionName != '' %}id="{{ functionName }}"{% endif %}>
+            </a>
+            {% endif %}
+        </figure>
+    </div>
+
+{% if functionName != '' %}
+<script>
+// set up feature function as variable
+var {{ functionName }} = function (cb_items) { 
+    // find item
+    var record = cb_items.find(item => item.objectid == {{ i | jsonify }});
+    if (record) {
+        // find file link
+        if (record.youtubeid){
+            var img_src = "https://img.youtube.com/vi/"+ record.youtubeid + "/hqdefault.jpg";
+    }
+    else if (record.filename.includes("/")) {
+            var img_src = record.filename;
+        } else {
+            var img_src = "{{ '/objects/' | relative_url }}" + record.filename;
+        }
+        var alt_test = "{{image_alt}}";
+        var caption_test = "{{image_caption}}";
+
+        if (alt_test.length > 0 ) {
+            var alt = alt_test;
+        } else{
+            var alt = record.title;
+        }
+        if (caption_test.length > 0 ) {
+            var caption = caption_test;
+        } else{
+            var caption = record.title;
+        }
+        // add object
+        document.querySelector("#{{ functionName }}").innerHTML =
+            `<a href="{{ '/item.html' | relative_url | append: '?id=' }}${ record.objectid }">
+                <img class="figure-img img-fluid rounded lazyload" alt="${ alt }"  title="click to see item" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="${ img_src }" >
+            </a>
+            <figcaption class="figure-caption"><a href="{{ '/item.html' | relative_url | append: '?id=' }}${ record.objectid }">${ caption }</a></figcaption>`;
+
+        
+    } else {
+        // message if objectid doesn't exist
+        console.log("Issue with image include: objectid {{ i }} does not exist.");
+        document.querySelector("#{{ functionName }}").innerHTML= "<span class='text-danger'>Problem with this image include: objectid {{ i }} does not exist.</span>";
+    }
+
+};
+
+// add feature function to includeFunctions array
+if(includeFunctions) {
+    includeFunctions.push({{ functionName }});
+} else {
+    var includeFunctions = [{{ functionName }}];
+}
+
+</script>
+{% endif %}
+{% endfor %}
 </div>

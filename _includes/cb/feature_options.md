@@ -1,35 +1,42 @@
 ## Feature *Includes* Bonanza page
 
+
+<span class="include_command " data-src="demo_010"  data-caption="a caption">
+
+<img class="include_command" data-src="demo_014" data-alt="a description of a picture">
+
+<span class="include_command " data-src="demo_003">
+
+<span class="include_command " data-src="demo_023" data-caption="an audio?">
+
+
+
+
+
+
 Check all the includes. Steal Code! 
 
 ### Image Options
 
 #### Image from Collection (auto caption)
 
-{% include feature/image.html objectid="demo_001" width="75" %}
+{% include feature/image.html objectid="demo_001" width="75" alt="a dull gray picture of an administration building" %}
 
-Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001" width="75" %}{% endraw %}`
+Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001" width="75" alt="a dull gray picture of an administration building"%}{% endraw %}`
 
 
 #### Image from Collection (with a caption)
 
-{% include feature/image.html objectid="demo_001" width="75" caption="an image" %}
+{% include feature/image.html objectid="demo_014" width="75" caption="an image" %}
 
 Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001" width="75" caption="an image" %}{% endraw %}`
 
 
 #### Multiple Images from the Collection (auto caption)
 
-{% include feature/image.html objectid="demo_001;demo_004;demo_005"  %}
+{% include feature/image.html objectid="demo_001;demo_004;demo_025" alt="a dull gray picture of an administration building;a gray clip from a youtube video of a house;the class pic of Jennie Eva Hughes"  %}
 
 Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001;demo_004;demo_005"  %}{% endraw %}`
-
-
-#### Multiple Images from the Collection (with captions)
-
-{% include feature/image.html objectid="demo_001;demo_004;demo_005" width="75" caption="demo1;nother" %}
-
-Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001;demo_004;demo_005" width="75" caption="demo1;nother" %}{% endraw %}`
 
 
 #### External Image (without a caption)
@@ -37,6 +44,15 @@ Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001;demo
 {% include feature/image.html objectid="https://www.lib.uidaho.edu/collectionbuilder/demo-objects/mg101_b6_photographs_01.jpg" width="75" alt="Frank B. Robinson at the Organ" %}
 
 Example Code --> `{% raw %}{% include feature/image.html objectid="https://www.lib.uidaho.edu/collectionbuilder/demo-objects/mg101_b6_photographs_01.jpg" width="75" alt="Frank B. Robinson at the Organ" %}{% endraw %}`
+
+
+#### Multiple Images from the Collection (with captions)
+
+{% include feature/image.html objectid="demo_018;demo_019" caption="front;back"  %}
+
+Example Code --> `{% raw %}{% include feature/image.html objectid="demo_018;demo_017" caption="back;front"  %}{% endraw %}`
+
+
 
 
 #### External Image (with a caption)
@@ -161,6 +177,8 @@ Example Code --> `{% raw %}{% include feature/audio.html objectid="https://www.l
 {% include feature/cloud.html fields="subject" min="1" background="dark" button="outline-warning" %}
 
 Example Code --> `{% raw %}{% include feature/cloud.html fields="subject" min="1" background="dark" button="outline-warning"  %}{% endraw %}`
+
+Example Code --> `{% raw %}{% include feature/cloud.html fields="subject" min="1" %}{% endraw %}`
 
 
 #### TimelineJS
