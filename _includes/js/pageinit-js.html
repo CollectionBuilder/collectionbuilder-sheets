@@ -1,3 +1,4 @@
+{% include setup-modal.html %}
 <script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script>
 
@@ -34,6 +35,19 @@ function cbGetMetadata(metadata_url) {
     });
 }
 
+/* function used by set up modal to set metadata */ 
+function cbMetadataSelector(metadata_url) { 
+    // record in session store
+    sessionStorage.setItem("cb_metadata_set",metadata_url);
+    console.log(sessionStorage.getItem("cb_metadata_set"));
+    // remove old session store
+    sessionStorage.removeItem("cb_items_store");
+    // give url to papa parse
+    cbGetMetadata(metadata_url);
+    // redirect to home
+    window.location.href = "{{ '/' | relative_url }}";
+}
+
 /* set base variables */
 var cb_items = [];
 var config_metadata = "{{ site.metadata-csv | relative_url }}";
@@ -51,13 +65,9 @@ if (sessionStorage.getItem("cb_items_store")) {
     // if metadata is configured but not yet loaded
     cbGetMetadata(config_metadata);
 } else {
-    // if no CSV is configured, add a warning alert
-    var metadataAlert = document.createElement("div");
-    metadataAlert.classList.add("container");
-    metadataAlert.innerHTML = `<div class="alert alert-warning mt-3 text-center h3" role="alert">
-        This site has no metadata set in "_config.yml"<br> please <a href="{{ '/setup/' | relative_url }}" class="alert-link">visit the setup page</a> to configure!
-    </div>`;
-    document.querySelector("main").prepend(metadataAlert);
+    // if no CSV is configured, show the setup modal
+    const setUpModal = new bootstrap.Modal(document.getElementById('cbSetUpModal')); 
+    setUpModal.show();
 }
 
 {% if site.development-refresh == true %}
