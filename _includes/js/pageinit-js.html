@@ -38,8 +38,7 @@ function cbGetMetadata(metadata_url) {
 /* function used by set up modal to set metadata */ 
 function cbMetadataSelector(metadata_url) { 
     // record in session store
-    sessionStorage.setItem("cb_metadata_set",metadata_url);
-    console.log(sessionStorage.getItem("cb_metadata_set"));
+    sessionStorage.setItem("cb_metadata_set", metadata_url);
     // remove old session store
     sessionStorage.removeItem("cb_items_store");
     // give url to papa parse
@@ -54,7 +53,15 @@ var config_metadata = "{{ site.metadata-csv | relative_url }}";
 
 /* set up the metadata */
 
-if (sessionStorage.getItem("cb_items_store")) {
+// check for csv option in url
+var queryString = new URLSearchParams(window.location.search);
+if (urlParams.has('csv')) {
+    var metadata_url_param = queryString.get('csv');
+    // record in session store
+    sessionStorage.setItem("cb_metadata_set", metadata_url_param);
+    // give url to papa parse
+    cbGetMetadata(metadata_url_param)
+} else if (sessionStorage.getItem("cb_items_store")) {
     // if items are already in sessionStorage init page
     cb_items = JSON.parse(sessionStorage.getItem("cb_items_store"));
     pageInit(cb_items);
