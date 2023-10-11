@@ -20,15 +20,16 @@ Set up a Google Sheet with metadata following the template.
 Be especially careful with column names in the first row!
 They need to have no spaces and no extra white space at the end of the value (and exactly match what you have used in configuring your collection site).
 
-On the Sheet, go to File > Publish to the Web.
-On the popup modal, use the dropdowns in "Link" tab to select the sheet name of your metadata (usually "Sheet 1") and "Comma-separated values (.csv)" options, then click "Publish" button.
+On the Sheet, ensure your metadata is the first sheet tab (by default "Sheet1").
+Then go to File > Share > Publish to the Web.
+On the popup modal, use the dropdowns in "Link" tab to select "Entire Document" and "Comma-separated values (.csv)" options, then click "Publish" button.
 Copy the link that is provided.
 
 Paste link into "_config.yml" as value for `metadata-csv`.
 
 For example: 
 
-`metadata-csv: https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?gid=0&single=true&output=csv`
+`metadata-csv: https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?output=csv`
 
 ## Set up Web CSV
 
@@ -55,3 +56,21 @@ Copy your CSV file into the "assets" folder then reference it in the "_config.ym
 For example:
 
 `metadata-csv: /assets/demo-metadata.csv`
+
+## Share via URL
+
+To share your work with others, the default template can also load web CSV metadata specified as a parameter in the URL.
+Add your full metadata link to the end of the CB-Sheets instance's URL as the "csv" option, like:
+
+`https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=<your metadata url here>`
+
+For example:
+
+`https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv`
+
+or 
+
+`https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?output=csv`
+
+**Note:** the metadata URL can not have any `&` (i.e. additional query string parameters). 
+Having a `&` in the URL will cause the parsing to fail.

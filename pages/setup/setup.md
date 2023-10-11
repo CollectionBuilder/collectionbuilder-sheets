@@ -20,38 +20,81 @@ The currently configured metadata is:
 To keep the currently configured metadata, simply navigate to another page!
 To change the metadata you have two options: paste in the full link for a CSV hosted online (such as a published Google Sheet) *or* select a CSV file from your computer.
 
-<div class="card mb-3">
-    <div class="card-body">
-        <h3>Use Metadata Link</h3>
-        <p>
-            <form id="metadataUrl" onsubmit="metadata_url_selector(); return false;">
-                <div class="input-group">
-                    <input type="url" id="csvUrl" class="form-control" placeholder="Paste in the full URL to CSV hosted online">
-                    <div class="input-group-append">
-                        <button class="btn btn-dark" type="submit">
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </p>
+<div class="accordion my-4" id="cbMetadataOptions">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            Select Demo Metadata
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#cbMetadataOptions">
+            <div class="accordion-body">
+                <p>Select one of our demo metadata examples</p>
+                <p>
+                    <form id="demoMetadata" onsubmit="cbMetadataSelector(this.cbDemoMetadataSelect.value); return false;">
+                        <div class="input-group">
+                            <select name="cbDemoMetadataSelect" class="form-select" aria-label="Select demo metadata option">
+                                <option selected value="https://collectionbuilder.github.io/collectionbuilder-sheets/assets/demo-metadata.csv">Default demo metadata</option>
+                                <option value="https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv">Psychiana Demo</option>
+                            </select>
+                            <div class="input-group-append">
+                                <button class="btn btn-dark" type="submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </p>
+            </div>
+        </div>
     </div>
-</div>
-<div class="card mt-3">
-    <div class="card-body">
-        <h3>Use Metadata CSV from Computer</h3>
-        <p>
-            <form id="metadataFile" onsubmit="metadata_file_selector(); return false;">
-                <div class="input-group">
-                    <input type="file" accept=".csv" id="csvFile" class="form-control">
-                    <div class="input-group-append">
-                        <button class="btn btn-dark" type="submit">
-                            Submit
-                        </button>
-                    </div>
-                </div>
-            </form>
-        </p>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+            Use Metadata CSV Link
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#cbMetadataOptions">
+            <div class="accordion-body">
+                <p>Paste in the full link for a CSV hosted online (such as a published Google Sheet)</p>
+                <p>
+                    <form id="metadataUrl" onsubmit="cbMetadataSelector(this.csvUrl.value); return false;">
+                        <div class="input-group">
+                            <input type="url" name="csvUrl" class="form-control" placeholder="Paste in the full URL to CSV hosted online">
+                            <div class="input-group-append">
+                                <button class="btn btn-dark" type="submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+            Use Metadata CSV from your Computer
+            </button>
+        </h2>
+        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#cbMetadataOptions">
+            <div class="accordion-body">
+                <p>Select a CSV file from your computer</p>
+                <p>
+                    <form id="metadataFile" onsubmit="cbMetadataSelector(this.csvFile.files[0]); return false;">
+                        <div class="input-group">
+                            <input type="file" accept=".csv" name="csvFile" class="form-control">
+                            <div class="input-group-append">
+                                <button class="btn btn-dark" type="submit">
+                                    Submit
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </p>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -65,22 +108,24 @@ Note: no information is sent to the server, the metadata and configuration chang
 
 ## How to Publish Your Google Sheet
 
-- On your Google Sheet, click "File" and select "Publish to the Web".
-- On the popup modal, use the dropdowns in "Link" tab to select the sheet name of your metadata (usually "Sheet 1") and "Comma-separated values (.csv)" options, then click "Publish" button.
+- In your Google Sheet, ensure that your metadata is the first sheet in the spreadsheet (by default named "Sheet1"). The tabs can be dragged to reorder if necessary.
+- Click "File", "Share", and select "Publish to the Web".
+- On the popup modal, use the dropdowns in "Link" tab to select "Entire Document" and "Comma-separated values (.csv)" options, then click "Publish" button.
 - Copy the link that is provided.
-- Paste the link into form above and click Submit.
+- In the "Use Metadata CSV Link" form above, paste the link and click "Submit".
 
 For example, a published link looks like:
 
-`https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?gid=0&single=true&output=csv`
+`https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?output=csv`
 
 ## How to Download Your Google Sheet as CSV
 
-- On your Google Sheet, click "File" and select “Download as Comma-separated values”
+- On your Google Sheet, switch to the sheet tab that contains your metadata (by default "Sheet1").
+- Click "File", "Download", and select “Comma Separated Values (.csv)”
 - The file should download to your computer's Downloads folder
-- Click in the "Choose file" box in the form above and navigate in your file explorer to select the downloaded CSV.
+- In the "Use Metadata CSV from your Computer" form above, click “Choose file” and navigate in your file explorer to select the downloaded CSV, then click "Submit".
 
-### Other Web CSV
+## Other Web CSV
 
 If you have a CSV available anywhere on the web, you can use it by referencing the full URL. 
 However, depending on where your CSV is hosted, you may encounter [CORS errors](https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors).
@@ -89,8 +134,22 @@ For example, to use a CSV hosted in a GitHub repository, use the "raw" link:
 
 `https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv`
 
-Paste the link into the "Use metadata link" form above and click Submit.
+Paste the link into the "Use Metadata CSV Link" form above and click Submit.
 
-### Spreadsheet on Your Local Computer
+## Share via URL
 
-When your CSV is ready, click in the "Choose file" box, navigate in your file explorer to select the CSV, and click Submit.
+To share your work with others, the default template can also load web CSV metadata specified as a parameter in the URL.
+Add your full metadata link to the end of the CB-Sheets instance's URL as the "csv" option, like:
+
+`https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=<your metadata url here>`
+
+For example:
+
+`https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv`
+
+or 
+
+`https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?output=csv`
+
+**Note:** the metadata URL can not have any `&` (i.e. additional query string parameters). 
+Having a `&` in the URL will cause the parsing to fail.
