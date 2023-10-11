@@ -55,12 +55,13 @@ var config_metadata = "{{ site.metadata-csv | relative_url }}";
 
 // check for csv option in url
 var queryString = new URLSearchParams(window.location.search);
-if (urlParams.has('csv')) {
-    var metadata_url_param = queryString.get('csv');
+if (querySting.has('csv') && queryString.get('csv').trim.length > 0) {
+    // if url has csv query string, use that as metadata link
+    var metadataUrlParam = queryString.get('csv');
     // record in session store
-    sessionStorage.setItem("cb_metadata_set", metadata_url_param);
+    sessionStorage.setItem("cb_metadata_set", metadataUrlParam);
     // give url to papa parse
-    cbGetMetadata(metadata_url_param)
+    cbGetMetadata(metadataUrlParam);
 } else if (sessionStorage.getItem("cb_items_store")) {
     // if items are already in sessionStorage init page
     cb_items = JSON.parse(sessionStorage.getItem("cb_items_store"));
