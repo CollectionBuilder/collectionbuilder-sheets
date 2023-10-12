@@ -46,6 +46,20 @@ function cbMetadataSelector(metadata_url) {
     // redirect to home
     window.location.href = "{{ '/' | relative_url }}";
 }
+/* function used by dev buttons to reload metadata */
+function refreshMetadata () {
+    // remove metadata
+    sessionStorage.removeItem("cb_items_store");
+    // reload
+    location.reload();
+}
+function resetMetadata () {
+    // remove data
+    sessionStorage.removeItem("cb_items_store");
+    sessionStorage.removeItem("cb_metadata_set");
+    // reload
+    location.reload();
+}
 
 /* set base variables */
 var cb_items = [];
@@ -79,28 +93,9 @@ if (queryString.has('csv') && queryString.get('csv').trim().length > 0) {
 }
 
 {% if site.development-refresh == true %}
+/* show dev btns if metadata is changed */ 
 if (sessionStorage.getItem("cb_metadata_set")) { 
-    var refreshButton = document.createElement("div");
-    refreshButton.classList.add("dev-buttons");
-    refreshButton.innerHTML = `<div class="btn-group-vertical">
-        ${ sessionStorage.getItem("cb_metadata_set").includes("https://") ? '<button class="btn btn-sm btn-info" onclick="refreshMetadata()" id="refreshButton">Refresh Metadata</button>' : '' }
-        <a class="btn btn-sm btn-warning" href="{{ '/setup/' | relative_url }}">Change Metadata</a>
-        <button class="btn btn-sm btn-secondary" onclick="resetMetadata()" id="refreshButton">Reset</button>
-        </div>`;
-    document.body.appendChild(refreshButton);
-    function refreshMetadata () {
-        // remove data
-        sessionStorage.removeItem("cb_items_store");
-        // reload
-        location.reload();
-    }
-    function resetMetadata () {
-        // remove data
-        sessionStorage.removeItem("cb_items_store");
-        sessionStorage.removeItem("cb_metadata_set");
-        // reload
-        location.reload();
-    }
+    document.getElementById("cbSetUpDevBtns").classList.remove("d-none");
 }
 {%- endif -%}
     
