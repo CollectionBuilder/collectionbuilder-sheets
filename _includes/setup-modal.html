@@ -17,7 +17,7 @@
 </div>
 <!-- Set up modal -->
 <div class="modal fade" id="cbSetUpModal" tabindex="-1" aria-labelledby="cbSetUpModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
                 <h1 class="modal-title" id="cbSetUpModalLabel">CollectionBuilder-Sheets Set Up</h1>
@@ -25,14 +25,14 @@
             </div>
             <div class="modal-body">
 
-                {% unless site.metadata-csv %}<p>Welcome to CollectionBuilder-Sheets!</p>
-                <p>It looks like this instance doesn't have any metadata configured. No worries, we can get a collection going in a couple clicks.</p>{% endunless %}
+                <p>Welcome to CollectionBuilder-Sheets!</p>
+                {% unless site.metadata-csv %}<p>It looks like this instance doesn't have any metadata configured. No worries, we can get a collection going in a couple clicks.</p>{% endunless %}
                 <p>Using the options below you can select demo metadata to explore a pre-built collection, or load your own metadata from the web or your local computer. The configurations are temporarily stored in your browser's session storage, so will remain only until you close this window!</p>
 
-                <div class="accordion my-4" id="cbMetadataOptions">
+                <div class="accordion my-5" id="cbMetadataOptions">
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            <button class="accordion-button fs-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                             Select Demo Metadata
                             </button>
                         </h2>
@@ -59,7 +59,7 @@
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            <button class="accordion-button fs-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                             Use Metadata CSV Link
                             </button>
                         </h2>
@@ -83,7 +83,7 @@
                     </div>
                     <div class="accordion-item">
                         <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            <button class="accordion-button fs-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
                             Use Metadata CSV from your Computer
                             </button>
                         </h2>
@@ -147,6 +147,24 @@
                 <p><code class="language-plaintext highlighter-rouge">https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv</code></p>
                 
                 <p>Paste the link into the "Use Metadata CSV Link" form above and click Submit.</p>
+
+                <h2 id="share-via-url">Share via URL</h2>
+
+                <p>To share your work with others, the default template can also load web CSV metadata specified as a parameter in the URL.
+                Add your full metadata link to the end of the CB-Sheets instance’s URL as the “csv” option, like:</p>
+
+                <p><code class="language-plaintext highlighter-rouge">https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=&lt;your metadata url here&gt;</code></p>
+
+                <p>For example:</p>
+
+                <p><code class="language-plaintext highlighter-rouge">https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/master/psychiana_cbdemo_gh.csv</code></p>
+
+                <p>or</p>
+
+                <p><code class="language-plaintext highlighter-rouge">https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?output=csv</code></p>
+
+                <p><strong>Note:</strong> the metadata URL can not have any <code class="language-plaintext highlighter-rouge">&amp;</code> (i.e. additional query string parameters). 
+                Having a <code class="language-plaintext highlighter-rouge">&amp;</code> in the URL will cause the parsing to fail.</p>
  
             </div>
         </div>
