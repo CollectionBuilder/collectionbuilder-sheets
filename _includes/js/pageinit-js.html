@@ -1,4 +1,4 @@
-{% include setup-modal.html %}
+{% if site.development-mode == true %}{% include setup-modal.html %}{% endif %}
 <script src="{{ '/assets/lib/papaparse.min.js' | relative_url }}"></script>
 <script>
 
@@ -46,6 +46,7 @@ function cbMetadataSelector(metadata_url) {
     // redirect to home
     window.location.href = "{{ '/' | relative_url }}";
 }
+{% if site.development-mode == true %}
 /* function used by dev buttons to reload metadata */
 function refreshMetadata () {
     // remove metadata
@@ -60,13 +61,18 @@ function resetMetadata () {
     // reload
     location.reload();
 }
+/* show dev btns if metadata is changed */ 
+if (sessionStorage.getItem("cb_metadata_set")) { 
+    document.getElementById("cbSetUpDevBtns").classList.remove("d-none");
+}
+{% endif %}
 
 /* set base variables */
 var cb_items = [];
 var config_metadata = "{{ site.metadata-csv | relative_url }}";
 
 /* set up the metadata */
-
+{% if site.development-mode == true %}
 // check for csv option in url
 var queryString = new URLSearchParams(window.location.search);
 if (queryString.has('csv') && queryString.get('csv').trim().length > 0) {
@@ -76,7 +82,7 @@ if (queryString.has('csv') && queryString.get('csv').trim().length > 0) {
     sessionStorage.setItem("cb_metadata_set", metadataUrlParam);
     // give url to papa parse
     cbGetMetadata(metadataUrlParam);
-} else if (sessionStorage.getItem("cb_items_store")) {
+} else {% endif %} if (sessionStorage.getItem("cb_items_store")) {
     // if items are already in sessionStorage init page
     cb_items = JSON.parse(sessionStorage.getItem("cb_items_store"));
     pageInit(cb_items);
@@ -92,12 +98,5 @@ if (queryString.has('csv') && queryString.get('csv').trim().length > 0) {
     setUpModal.show();
 }
 
-{% if site.development-refresh == true %}
-/* show dev btns if metadata is changed */ 
-if (sessionStorage.getItem("cb_metadata_set")) { 
-    document.getElementById("cbSetUpDevBtns").classList.remove("d-none");
-}
-{%- endif -%}
-    
 </script>
     
