@@ -74,3 +74,11 @@ or
 
 **Note:** the metadata URL can not have any `&` (i.e. additional query string parameters). 
 Having a `&` in the URL will cause the parsing to fail.
+
+## Development Mode
+
+"_config.yml" has the option `development-mode: true` which turns on features that allow the metadata on the site to be temporarily reconfigured by users. 
+This is handy when collaborating and prototyping--you don't even need metadata configured! 
+
+When you want to finalize your collection, you can set `development-mode: false` to turn these features off. 
+For long term access and better performance, it is best to add your final metadata CSV directly to the repository, as described in "Use CSV in Project" above.

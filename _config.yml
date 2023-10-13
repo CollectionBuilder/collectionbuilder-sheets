@@ -70,7 +70,7 @@ metadata-csv: /assets/demo-metadata.csv
 # JEKYLL_ENV=production jekyll build
 # (this is done automatically by gh-pages build)
 #
-#
+# dev mode turns on ability to change metadata
 development-mode: true
 # ignore stuff
 exclude: [docs/, Rakefile, README.md, LICENSE]
