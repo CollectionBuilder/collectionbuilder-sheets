@@ -1,13 +1,30 @@
 # CollectionBuilder-Sheets
 
-**Note: this template is not yet fully functional or documented! Check back soon**
-
-CollectionBuilder-Sheets is an experimental project template designed to load collection metadata directly from Google Sheets or other CSV. 
+CollectionBuilder-Sheets is a template for creating simple digital exhibit websites by loading collection metadata directly from a CSV (such as a published Google Sheet!). 
 This enables live collaboration to prototype collections with minimal set up.
+Driven by your collection metadata, the template generates engaging visualizations to browse and explore your objects.
+The resulting static site can be hosted on any basic web server (*or built automatically and hosted for free on GitHub Pages!*).
 
-To learn more check [docs/sheets-metadata.md](docs/sheets-metadata.md).
+Visit the [CB-Sheets demo site](https://collectionbuilder.github.io/collectionbuilder-sheets/) to see it in action and even test your own metadata!
 
-This template is based on [CollectionBuilder-GH](https://github.com/CollectionBuilder/collectionbuilder-gh).
+To learn more check [docs/sheets-metadata.md](docs/sheets-metadata.md) or visit the [CollectionBuilder Docs](https://collectionbuilder.github.io/cb-docs/) for step-by-step details for getting started and building collections.
+
+Note that CB-Sheets is based on and mostly compatible with [CollectionBuilder-GH](https://github.com/CollectionBuilder/collectionbuilder-gh), but handles the metadata parsing in a fundamentally different way. 
+
+----------
+
+## CollectionBuilder 
+
+<https://collectionbuilder.github.io/>
+
+CollectionBuilder is a project of University of Idaho Library's [Digital Initiatives](https://www.lib.uidaho.edu/digital/) and the [Center for Digital Inquiry and Learning](https://cdil.lib.uidaho.edu) (CDIL) following the [Lib-Static](https://lib-static.github.io/) methodology. 
+Powered by the open source static site generator [Jekyll](https://jekyllrb.com/) and a modern static web stack, it puts collection metadata to work building beautiful sites.
+
+The basic theme is created using [Bootstrap](https://getbootstrap.com/).
+Metadata visualizations are built using open source libraries such as [DataTables](https://datatables.net/), [Leafletjs](http://leafletjs.com/), [Spotlight gallery](https://github.com/nextapps-de/spotlight), [lazysizes](https://github.com/aFarkas/lazysizes), and [Lunr.js](https://lunrjs.com/).
+Object metadata is exposed using [Schema.org](http://schema.org) and [Open Graph protocol](http://ogp.me/) standards.
+
+Questions can be directed to **collectionbuilder.team@gmail.com**
 
 ## License
 
