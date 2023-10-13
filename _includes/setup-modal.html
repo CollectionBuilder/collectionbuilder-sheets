@@ -26,7 +26,7 @@
             <div class="modal-body">
 
                 <p>Welcome to CollectionBuilder-Sheets!</p>
-                {% unless site.metadata-csv %}<p>It looks like this instance doesn't have any metadata configured. No worries, we can get a collection going in a couple clicks.</p>{% endunless %}
+                
                 <p>Using the options below you can select demo metadata to explore a pre-built collection, or load your own metadata from the web or your local computer. The configurations are temporarily stored in your browser's session storage, so will remain only until you close this window!</p>
 
                 <div class="accordion my-5" id="cbMetadataOptions">
@@ -65,7 +65,7 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#cbMetadataOptions">
                             <div class="accordion-body">
-                                <p>Paste in the full link for a CSV hosted online (such as a published Google Sheet)</p>
+                                <p>Paste in the full url for a CSV hosted online, such as a published Google Sheet (see below for <a href="#how-to-publish-your-google-sheet">instructions</a>!)</p>
                                 <p>
                                     <form id="metadataUrl" onsubmit="cbMetadataSelector(this.csvUrl.value); return false;">
                                         <div class="input-group">
