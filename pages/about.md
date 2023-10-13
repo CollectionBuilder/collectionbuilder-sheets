@@ -8,7 +8,7 @@ credits: true
 # Look in _includes/feature for options to easily add features to the page
 ---
 
-{% include feature/jumbotron.html objectid="https://evanwill.github.io/refine-with-grel/images/jj-ying-WmnsGyaFnCQ-unsplash.jpg" %}
+{% include feature/jumbotron.html objectid="/assets/img/jj-ying-WmnsGyaFnCQ-unsplash_opt2.jpg" %}
 
 ## About CollectionBuilder-Sheets
 
