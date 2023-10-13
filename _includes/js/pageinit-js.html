@@ -20,6 +20,11 @@ function pageInit(items) {
 
 /* function to retrieve metadata, parse, add to sessionStorage, and init page */ 
 function cbGetMetadata(metadata_url) {
+    /* add loading icon while getting csv */ 
+    var loadingIcon = document.createElement("div");
+    loadingIcon.classList.add("text-center", "p-4");
+    loadingIcon.innerHTML = '<strong>Loading...</strong> <div class="spinner-border text-dark" role="status"></div>';
+    document.querySelector("main").prepend(loadingIcon);
     /* use papaparse to get metadata from configured CSV URL, then init page */
     Papa.parse(metadata_url, {
         download: true,
@@ -28,6 +33,7 @@ function cbGetMetadata(metadata_url) {
             cb_items = results.data.filter(item => item["objectid"]);
             sessionStorage.setItem("cb_items_store", JSON.stringify(cb_items));
             pageInit(cb_items);
+            loadingIcon.classList.add('d-none');
         },
         error: (err) => {
             alert("There is an error parsing your CSV! Please check the configured URL or file. The most common issue is incorrect filename, path, or URL so that your CSV is not found.");
