@@ -1,0 +1,174 @@
+<!-- dev buttons -->
+<div id="cbSetUpDevBtns" class="d-none position-absolute top-0 end-0 p-3 bg-dark bg-opacity-75">
+    <button class="btn btn-sm btn-link text-white" onclick="refreshMetadata()" id="refreshButton">
+        <svg class="bi icon-sprite" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+            <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
+            <path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/>
+        </svg>
+        Refresh Metadata
+    </button>
+    <button class="btn btn-sm btn-link text-white" data-bs-toggle="modal" data-bs-target="#cbSetUpModal">
+        <svg class="bi icon-sprite" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
+            <path d="M8 4.754a3.246 3.246 0 1 0 0 6.492 3.246 3.246 0 0 0 0-6.492zM5.754 8a2.246 2.246 0 1 1 4.492 0 2.246 2.246 0 0 1-4.492 0z"/>
+            <path d="M9.796 1.343c-.527-1.79-3.065-1.79-3.592 0l-.094.319a.873.873 0 0 1-1.255.52l-.292-.16c-1.64-.892-3.433.902-2.54 2.541l.159.292a.873.873 0 0 1-.52 1.255l-.319.094c-1.79.527-1.79 3.065 0 3.592l.319.094a.873.873 0 0 1 .52 1.255l-.16.292c-.892 1.64.901 3.434 2.541 2.54l.292-.159a.873.873 0 0 1 1.255.52l.094.319c.527 1.79 3.065 1.79 3.592 0l.094-.319a.873.873 0 0 1 1.255-.52l.292.16c1.64.893 3.434-.902 2.54-2.541l-.159-.292a.873.873 0 0 1 .52-1.255l.319-.094c1.79-.527 1.79-3.065 0-3.592l-.319-.094a.873.873 0 0 1-.52-1.255l.16-.292c.893-1.64-.902-3.433-2.541-2.54l-.292.159a.873.873 0 0 1-1.255-.52l-.094-.319zm-2.633.283c.246-.835 1.428-.835 1.674 0l.094.319a1.873 1.873 0 0 0 2.693 1.115l.291-.16c.764-.415 1.6.42 1.184 1.185l-.159.292a1.873 1.873 0 0 0 1.116 2.692l.318.094c.835.246.835 1.428 0 1.674l-.319.094a1.873 1.873 0 0 0-1.115 2.693l.16.291c.415.764-.42 1.6-1.185 1.184l-.291-.159a1.873 1.873 0 0 0-2.693 1.116l-.094.318c-.246.835-1.428.835-1.674 0l-.094-.319a1.873 1.873 0 0 0-2.692-1.115l-.292.16c-.764.415-1.6-.42-1.184-1.185l.159-.291A1.873 1.873 0 0 0 1.945 8.93l-.319-.094c-.835-.246-.835-1.428 0-1.674l.319-.094A1.873 1.873 0 0 0 3.06 4.377l-.16-.292c-.415-.764.42-1.6 1.185-1.184l.292.159a1.873 1.873 0 0 0 2.692-1.115l.094-.319z"/>
+        </svg> 
+        Change Metadata
+    </button>
+</div>
+<!-- Set up modal -->
+<div class="modal fade" id="cbSetUpModal" tabindex="-1" aria-labelledby="cbSetUpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title" id="cbSetUpModalLabel">CollectionBuilder-Sheets Config</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+                <p>Welcome to CollectionBuilder-Sheets!</p>
+                
+                <p>Using the options below you can select demo metadata to explore a pre-built collection, or load your own metadata from the web or your local computer. The configurations are temporarily stored in your browser's session storage, so will remain only until you close this window!</p>
+
+                <div class="accordion my-5" id="cbMetadataOptions">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button fs-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                            Select Demo Metadata
+                            </button>
+                        </h2>
+                        <div id="collapseOne" class="accordion-collapse collapse show" data-bs-parent="#cbMetadataOptions">
+                            <div class="accordion-body">
+                                <p>Select one of our demo metadata examples</p>
+                                <p>
+                                    <form id="demoMetadata" onsubmit="cbMetadataSelector(this.cbDemoMetadataSelect.value); return false;">
+                                        <div class="input-group">
+                                            <select name="cbDemoMetadataSelect" class="form-select" aria-label="Select demo metadata option">
+                                                <option selected value="https://collectionbuilder.github.io/collectionbuilder-sheets/assets/demo-metadata.csv">Default demo metadata</option>
+                                                <option value="https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/psychiana_cbdemo_gh.csv">Psychiana Demo</option>
+                                                <option value="https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/watkins_cbdemo_gh.csv">Watkins Demo</option>
+                                            </select>
+                                            <div class="input-group-append">
+                                                <button class="btn btn-dark" type="submit">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button fs-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                            Use Metadata CSV Link (e.g. Google Sheet)
+                            </button>
+                        </h2>
+                        <div id="collapseTwo" class="accordion-collapse collapse" data-bs-parent="#cbMetadataOptions">
+                            <div class="accordion-body">
+                                <p>Paste in the full url for a CSV hosted online, such as a published Google Sheet (see below for <a href="#how-to-publish-your-google-sheet">instructions</a>!)</p>
+                                <p>
+                                    <form id="metadataUrl" onsubmit="cbMetadataSelector(this.csvUrl.value); return false;">
+                                        <div class="input-group">
+                                            <input type="url" name="csvUrl" class="form-control" placeholder="Paste in the full URL to CSV hosted online">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-dark" type="submit">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button fs-3 collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                            Use Metadata CSV from your Computer
+                            </button>
+                        </h2>
+                        <div id="collapseThree" class="accordion-collapse collapse" data-bs-parent="#cbMetadataOptions">
+                            <div class="accordion-body">
+                                <p>Select a CSV file from your computer</p>
+                                <p>
+                                    <form id="metadataFile" onsubmit="cbMetadataSelector(this.csvFile.files[0]); return false;">
+                                        <div class="input-group">
+                                            <input type="file" accept=".csv" name="csvFile" class="form-control">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-dark" type="submit">
+                                                    Submit
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h2>Metadata Tips</h2>
+
+                <p>Set up your metadata carefully following the <a href="{{ '/metadata.html' | relative_url }}">template guidelines</a>.
+                Be especially careful with column names in the first row–they need to exactly match the template, with no spaces and no extra white space at the end of the value. Records without an “objectid” will be skipped.</p>
+                    
+                <p>Note: no information is sent to the server, the metadata and configuration change is only on your computer.</p>
+                    
+                <h3 id="how-to-publish-your-google-sheet">How to Publish Your Google Sheet</h3>
+                    
+                <ul>
+                    <li>In your Google Sheet, ensure that your metadata is the first sheet in the spreadsheet (by default named "Sheet1"). The tabs can be dragged to reorder if necessary.</li>
+                    <li>Click “File”, “Share”, and select “Publish to the Web”.</li>
+                    <li>On the popup modal, use the dropdowns in “Link” tab to select “Entire Document” and “Comma-separated values (.csv)” options, then click “Publish” button.</li>
+                    <li>Copy the link that is provided.</li>
+                    <li>In the "Use Metadata CSV Link" form above, paste the link and click "Submit".</li>
+                </ul>
+                    
+                <p>For example, a published link looks like:</p>
+                
+                <p><code class="language-plaintext highlighter-rouge">https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?output=csv</code></p>
+                    
+                <h3 id="how-to-download-your-google-sheet-as-csv">How to Download Your Google Sheet as CSV</h3>
+                
+                <ul>
+                    <li>On your Google Sheet, switch to the sheet tab that contains your metadata (by default "Sheet1").</li>
+                    <li>Click “File”, “Download”, and select as "Comma Separated Values (.csv)”</li>
+                    <li>The file should download to your computer’s Downloads folder</li>
+                    <li>In the "Use Metadata CSV from your Computer" form above, click “Choose file” and navigate in your file explorer to select the downloaded CSV, then click "Submit".</li>
+                </ul>
+                
+                <h3 id="other-web-csv">Other Web CSV</h3>
+                
+                <p>If you have a CSV available anywhere on the web, you can use it by referencing the full URL. 
+                However, depending on where your CSV is hosted, you may encounter <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS/Errors">CORS errors</a>.</p>
+                
+                <p>For example, to use a CSV hosted in a GitHub repository, use the “raw” link:</p>
+                
+                <p><code class="language-plaintext highlighter-rouge">https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/psychiana_cbdemo_gh.csv</code></p>
+                
+                <p>Paste the link into the "Use Metadata CSV Link" form above and click Submit.</p>
+
+                <h2 id="share-via-url">Share via URL</h2>
+
+                <p>To share your work with others, the default template can also load web CSV metadata specified as a parameter in the URL.
+                Add your full metadata link to the end of the CB-Sheets instance’s URL as the “csv” option, like:</p>
+
+                <p><code class="language-plaintext highlighter-rouge">https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=&lt;your metadata url here&gt;</code></p>
+
+                <p>For example:</p>
+
+                <p><code class="language-plaintext highlighter-rouge">https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/psychiana_cbdemo_gh.csv</code></p>
+
+                <p>or</p>
+
+                <p><code class="language-plaintext highlighter-rouge">https://collectionbuilder.github.io/collectionbuilder-sheets/?csv=https://docs.google.com/spreadsheets/d/e/2PACX-1vSn7AA-cbsXT3_nNUGftc1ab-CKXOJHMQCIENeR9NHElbyI9_qA99o0-HNZdG04v-M2_N21bUe_krQQ/pub?output=csv</code></p>
+
+                <p><strong>Note:</strong> the metadata URL can not have any <code class="language-plaintext highlighter-rouge">&amp;</code> (i.e. additional query string parameters). 
+                Having a <code class="language-plaintext highlighter-rouge">&amp;</code> in the URL will cause the parsing to fail.</p>
+ 
+            </div>
+        </div>
+    </div>
+</div>
+  
