@@ -31,7 +31,7 @@
         {%- capture item_caption -%}{{ captions[forloop.index0] | default: src }}{%- endcapture -%}
         {%- capture image_alt -%}{{ alts[forloop.index0] }}{%- endcapture -%}
     {%- capture image_link -%}{{ links[forloop.index0] | default: image_src }}{%- endcapture -%}
-        
+    {% capture functionName %}{% endcapture %}
     {% else %}
         {%- capture image_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: i }}{% endcapture %}
         {% if captions %}{%- capture image_caption -%}{{ captions[forloop.index0] }}{%- endcapture -%}{% endif %}
@@ -92,8 +92,8 @@ var {{ functionName }} = function (cb_items) {
         
     } else {
         // message if objectid doesn't exist
-        console.log("Issue with image include: objectid " + record.objectid + " does not exist.");
-        document.querySelector("#{{ functionName }}").innerHTML= "<span class='text-danger'>Problem with this image include: objectid " + record.objectid + " does not exist.</span>";
+        console.log("Issue with image include: objectid {{ i }} does not exist.");
+        document.querySelector("#{{ functionName }}").innerHTML= "<span class='text-danger'>Problem with this image include: objectid {{i}} does not exist.</span>";
     }
 
 };

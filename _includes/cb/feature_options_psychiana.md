@@ -20,10 +20,16 @@ Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001" wid
 
 #### Multiple Images from the Collection (auto caption)
 
-{% include feature/image.html objectid="psychiana032;psychiana041;psychiana033;"  %}
+{% include feature/image.html objectid="psychiana032;psychiana034;psychiana033;"  %}
 
 Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001;demo_004;demo_005"  %}{% endraw %}`
 
+
+#### Multiple Images from the Collection (with captions)
+
+{% include feature/image.html objectid="psychiana034;psychiana038;psychiana040" caption="one;two;three" %}
+
+Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001;demo_004;demo_005" width="75" caption="demo1;nother;" %}{% endraw %}`
 
 
 
@@ -47,12 +53,6 @@ Example Code --> `{% raw %}{% include feature/image.html objectid="https://www.l
 {% include feature/image.html objectid="https://www.lib.uidaho.edu/collectionbuilder/demo-objects/mg101_b6_photographs_01.jpg;https://www.lib.uidaho.edu/collectionbuilder/demo-objects/mg101_b6_psychiana_photographs_010.jpg" caption="this guy!;(was nothing without these women!)" link="https://www.lib.uidaho.edu/digital/psychiana/items/psychiana519.html;https://www.lib.uidaho.edu/digital/psychiana/items/psychiana547.html" alt="Frank B. Robinson at the Organ;Women staff members of Psychiana lined up outside the Psychiana headquarters" %}
 
 Example Code --> `{% raw %}{% include feature/image.html objectid="https://www.lib.uidaho.edu/collectionbuilder/demo-objects/mg101_b6_photographs_01.jpg;https://www.lib.uidaho.edu/collectionbuilder/demo-objects/mg101_b6_psychiana_photographs_010.jpg" caption="this guy!;(was nothing without these women!)" link="https://www.lib.uidaho.edu/digital/psychiana/items/psychiana519.html;https://www.lib.uidaho.edu/digital/psychiana/items/psychiana547.html" alt="Frank B. Robinson at the Organ;Women staff members of Psychiana lined up outside the Psychiana headquarters" %}{% endraw %}`
-
-#### Multiple Images from the Collection (with captions)
-
-{% include feature/image.html objectid="psychiana035;psychiana038;psychiana040" caption="one;two;three" %}
-
-Example Code --> `{% raw %}{% include feature/image.html objectid="demo_001;demo_004;demo_005" width="75" caption="demo1;nother;" %}{% endraw %}`
 
 ### PDF Options
 
