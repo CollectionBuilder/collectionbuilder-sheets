@@ -164,12 +164,6 @@ Example Code --> `{% raw %}{% include feature/audio.html objectid="https://www.l
 Example Code --> `{% raw %}{% include feature/cloud.html fields="subject" min="1" background="dark" button="outline-warning"  %}{% endraw %}`
 
 
-#### TimelineJS
-
-{% include feature/timelinejs.html  %}
-
-Example Code --> `{% raw %}{% include feature/timelinejs.html  %}{% endraw %}`
-
 
 ### Include [Bootstrap](https://getbootstrap.com/) Features
 
