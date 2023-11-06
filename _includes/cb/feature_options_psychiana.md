@@ -74,14 +74,14 @@ Example Code --> `{% raw %}{% include feature/pdf.html objectid="demo_002" width
 
 {% include feature/pdf.html objectid="https://www.lib.uidaho.edu/digital/objects/bach-festival/idaho-bach-festival-05-poster.pdf" width="50" %}
 
-Example Code --> `{% raw %}{% include feature/pdf.html objectid="https://digital.lib.uidaho.edu/utils/getfile/collection/ui_ep/id/21768/filename/uiext21768.pdf" width="50" %}{% endraw %}`
+Example Code --> `{% raw %}{% include feature/pdf.html objectid="https://www.lib.uidaho.edu/digital/objects/bach-festival/idaho-bach-festival-05-poster.pdf" width="50" %}{% endraw %}`
 
 
 #### External PDF (with a caption)
 
-{% include feature/pdf.html objectid="https://digital.lib.uidaho.edu/utils/getfile/collection/ui_ep/id/21768/filename/uiext21768.pdf" width="50" caption="Safe Chainsawing is Important!" %}
+{% include feature/pdf.html objectid="https://www.lib.uidaho.edu/collectionbuilder/demo-objects/uiext21768.pdf" width="50" caption="Safe Chainsawing is Important!" %}
 
-Example Code --> `{% raw %}{% include feature/pdf.html objectid="https://digital.lib.uidaho.edu/utils/getfile/collection/ui_ep/id/21768/filename/uiext21768.pdf" width="50" caption="Safe Chainsawing is Important!" %}{% endraw %}`
+Example Code --> `{% raw %}{% include feature/pdf.html objectid="https://www.lib.uidaho.edu/collectionbuilder/demo-objects/uiext21768.pdf" width="50" caption="Safe Chainsawing is Important!" %}{% endraw %}`
 
 
 ### Video Options
