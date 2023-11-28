@@ -111,6 +111,27 @@ function createMap(geodata) {
         document.querySelector('input.search-input').value = "";
     });{% endif %}
 
+    /* show popup if id in URL query */ 
+    if (markerFilter != "") {
+        {% if site.data.theme.map-cluster == true %}
+        markers.eachLayer(layer => {
+            if (layer.feature.properties.objectid === markerFilter) {
+                /* uncluster clusters, then show */ 
+                if (markers.getVisibleParent(layer)["_childCount"]) {
+                    markers.getVisibleParent(layer).spiderfy();
+                } 
+                layer.openPopup();
+            }
+        });
+        {% else %}
+        mapFeatures.eachLayer(layer => {
+            if (layer.feature.properties.objectid === markerFilter) {
+                layer.openPopup();
+            }
+        });
+        {% endif %}
+    }
+
 }
 
 /* function to create object popups */
@@ -119,7 +140,7 @@ function objectPopups(feature, layer) {
     /* bind feature for search */
     feature.layer = layer;{% endif %}
     /* calculate item link */
-    var itemHref = '{{ "/item.html?id=" | relative_url }}' + feature.properties.objectid;
+    var itemHref = feature.properties.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + feature.properties.parentid + "#" + feature.properties.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + feature.properties.objectid;
     /* find object thumb based on format */
     var thumbSrc;
     if (feature.properties.youtubeid) {
@@ -135,7 +156,11 @@ function objectPopups(feature, layer) {
     } else if (feature.properties.format && feature.properties.format.includes("video")) {
         thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-video }}.svg'; 
     } else if (feature.properties.format && feature.properties.format.includes("pdf")) {
-        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-pdf }}.svg';  
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-pdf }}.svg';
+    } else if (feature.properties.format && feature.properties.format.includes("compound")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-compound-object }}.svg';  
+    } else if (feature.properties.format && feature.properties.format.includes("multiple")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-multiple }}.svg'; 
     } else {
         thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-default }}.svg';
     }    
@@ -156,15 +181,20 @@ function objectPopups(feature, layer) {
 }
 /* function to add objects to map */
 function objectMarkers(feature,latlng) {
-    var marker = L.marker(latlng);
+    var marker = L.marker(latlng, {alt: feature.properties.title});
     {% if site.data.theme.map-cluster == true %}markers.addLayer(marker);{% endif %}
     return marker;
 }
 
 // set up geodata var
 var geodata = { "type": "FeatureCollection", "features": [ ] };
+
 /* prep metadata */
 var mapPageInit = function (cb_items) {
+    {% unless site.data.theme.map-child-objects == true %}
+    // filter compound objects
+    var cb_items = cb_items.filter(item => !item.parentid);
+    {% endunless %}
     // filter out no lat long
     var items = cb_items.filter(function(item) { return item.latitude && item.longitude; });
     // get configured fields
