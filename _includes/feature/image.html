@@ -82,12 +82,14 @@ var {{ functionName }} = function (cb_items) {
         } else{
             var caption = record.title;
         }
+        // figure out item link
+        var itemHref = record.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + record.parentid + "#" + record.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + record.objectid;
         // add object
         document.querySelector("#{{ functionName }}").innerHTML =
-            `<a href="{{ '/item.html' | relative_url | append: '?id=' }}${ record.objectid }">
+            `<a href="${ itemHref }">
                 <img class="figure-img img-fluid rounded lazyload" alt="${ alt }"  title="click to see item" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="${ img_src }" >
             </a>
-            <figcaption class="figure-caption"><a href="{{ '/item.html' | relative_url | append: '?id=' }}${ record.objectid }">${ caption }</a></figcaption>`;
+            <figcaption class="figure-caption"><a href="${ itemHref }">${ caption }</a></figcaption>`;
 
         
     } else {
@@ -99,11 +101,7 @@ var {{ functionName }} = function (cb_items) {
 };
 
 // add feature function to includeFunctions array
-if(includeFunctions) {
-    includeFunctions.push({{ functionName }});
-} else {
-    var includeFunctions = [{{ functionName }}];
-}
+includeFunctions.push({{ functionName }});
 
 </script>
 {% endif %}

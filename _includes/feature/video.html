@@ -38,7 +38,7 @@
     {% endif %}
     {% assign video_link = include.objectid %}
 {%- else -%}
-    {%- capture video_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: include.objectid }}{%- endcapture -%}
+    {%- capture video_link -%}{%- endcapture -%}
     {% capture functionName %}video_feature_{{ include.objectid | slugify | replace: "-","_" }}{% endcapture %}    
 {%- endif -%}
 <div class="text-center my-4">
@@ -90,7 +90,8 @@ var {{ functionName }} = function (cb_items) {
 
         {% unless include.caption or include.caption == false %}
         // add caption
-        document.querySelector("#{{ functionName }}Caption a").innerHTML = record.title;
+        var itemHref = record.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + record.parentid + "#" + record.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + record.objectid;
+        document.querySelector("#{{ functionName }}Caption").innerHTML = `<a href="${ itemHref }">${ record.title}</a>`;
         {% endunless %}
     } else {
         // message if objectid doesn't exist
