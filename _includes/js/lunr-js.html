@@ -21,7 +21,7 @@ function lunr_search () {
             {% for d in display %}
             {% if forloop.first %}
             '<p class="h4"><a href="' + itemHref + '">' + cb_items[ref][{{ fields[0].field | jsonify }}]  + '</a></p>' +
-            '<p class="ml-3">';
+            '<p class="ms-3">';
               {% else %}
               if(cb_items[ref][{{ d.field | jsonify }}]) {
                 searchitem += cb_items[ref][{{ d.field | jsonify }}] + '<br> '; }
