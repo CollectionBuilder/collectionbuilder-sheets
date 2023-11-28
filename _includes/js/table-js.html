@@ -1,25 +1,30 @@
 {% assign fcount = site.data.config-table | size %}
 {%- assign fields = site.data.config-table | map: 'field' -%}
-/* load DataTables with jquery bundled */
+{% comment %}load DataTables with jquery bundled{% endcomment %}
 <script type="text/javascript" language="javascript" src="{{ '/assets/lib/datatables/datatables.min.js' | relative_url }}"></script>
 <script>
 
 /* function to init table after loading items */ 
 var tablePageInit = function (cb_items) {
+    {% unless site.data.theme.data-child-objects == true %}
+    // filter compound objects
+    var cb_items = cb_items.filter(item => !item.parentid);
+    {% endunless %}
     // set up data
     var table_data = [];
     // get configured fields
     for (var i = 0; i < cb_items.length; i++) {
+        var itemHref = cb_items[i].parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + cb_items[i].parentid + "#" + cb_items[i].objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + cb_items[i].objectid;
         var row = [];
         {% for f in fields %}
         if(cb_items[i][{{ f | jsonify }}]) { row.push(cb_items[i][{{ f | jsonify }}]); } else { row.push("n/a"); }
         {% endfor %}
-        row.push("{{ '/item.html?id=' | relative_url }}" + cb_items[i].objectid );
+        row.push(itemHref);
         table_data.push(row);
     }
     // init datatables 
     $('#item-table').DataTable( {
-        // use DataTables ajax load to 
+        // load data
         data: table_data,
         // defer render to speed up large sets
         "deferRender": true,
