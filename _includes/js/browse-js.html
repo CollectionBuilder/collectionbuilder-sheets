@@ -15,20 +15,26 @@ var browse_items;
 /* function to make each item card on page */
 function makeCard(obj) {
     // find item link
-    var itemHref = "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.objectid;
+    var itemHref = obj.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.parentid + "#" + obj.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.objectid;
     // find images
     var imgSrc, thumbSrc;
     // add images or thumb for objects based on format
     if(obj.youtubeid) {
       imgSrc = 'https://img.youtube.com/vi/' + obj.youtubeid + '/hqdefault.jpg';
     } else if (obj.format.includes("image")) {
-      if(obj.filename.includes("/")) { imgSrc = obj.filename; } else { imgSrc = "{{ '/objects/' | relative_url }}" + obj.filename; }
+      imgSrc = obj.filename.includes("/") ? obj.filename : "{{ '/objects/' | relative_url }}" + obj.filename;
     } else if (obj.format.includes("audio")) {
       thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-audio }}.svg';
     } else if (obj.format.includes("video")) {
-      thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-video }}.svg';  
+      thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-video }}.svg';
     } else if (obj.format.includes("pdf")) {
       thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-pdf }}.svg';
+    } else if (obj.format.includes("record")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-record }}.svg';
+    } else if (obj.format.includes("compound")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-compound-object }}.svg';
+    } else if (obj.format.includes("multiple")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-multiple }}.svg';
     } else {
       thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-default }}.svg';
     }  
@@ -66,13 +72,17 @@ function makeCard(obj) {
     // media type
     if(obj.format != "") {
       card += '<p class="card-text"><small><a class="btn btn-sm btn-outline-secondary" href="{{ '/browse.html' | relative_url }}#' + encodeURIComponent(obj.format) + '">' + 
-      obj.format.split("/").pop().toUpperCase() + ' <svg class="bi icon-sprite"><use xlink:href="{{ "/assets/lib/cb-icons.svg" | relative_url }}#';
+      obj.format.split("/").pop().replace("_", " ").toUpperCase() + ' <svg class="bi icon-sprite"><use xlink:href="{{ "/assets/lib/cb-icons.svg" | relative_url }}#';
       if(obj.format.includes('image')){
           card += 'icon-image';
       } else if(obj.format.includes('audio')){
           card += 'icon-audio';
       } else if(obj.format.includes('video')){
           card += 'icon-video';
+      } else if(obj.format.includes('multiple')){
+          card += 'icon-multiple';
+      } else if(obj.format.includes('compound')){
+          card += 'icon-compound-object';
       } else {
           card += 'icon-default';
       }
@@ -139,6 +149,10 @@ function filterItems(arr,q) {
 
 /* function to init browse after loading items */ 
 var browsePageInit = function (cb_items) {
+  {% unless site.data.theme.browse-child-objects == true %}
+  // filter compound objects
+  var cb_items = cb_items.filter(item => !item.parentid);
+  {% endunless %}
   /* randomize items once at page load */
   shuffle(cb_items);
   /* filter if hash in initial URL */
@@ -205,11 +219,11 @@ sortOptions.forEach((button) => {
     // send to sort and filter
     if (field != 'random') {
         sorting(cb_items, field);
-        filterItems(cb_items,query);
+        filterItems(cb_items, query);
     }
     else {
         shuffle(cb_items);
-        filterItems(cb_items,query);
+        filterItems(cb_items, query);
     }
   });
 }); 
