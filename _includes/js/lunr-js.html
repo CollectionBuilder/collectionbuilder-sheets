@@ -13,13 +13,14 @@ function lunr_search () {
   var newresults = '<tr><td><h4 class="mt-3">' + result.length + ' Result(s) found</h4></td></tr>';
   for (var item in result) {
     var ref = result[item].ref;
+    var itemHref = cb_items[ref].parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + cb_items[ref].parentid + "#" + cb_items[ref].objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + cb_items[ref].objectid;
     var searchitem =
       '<tr>'+
           '<td class="">' +
             {% assign display = fields | where: 'display','true' %}
             {% for d in display %}
             {% if forloop.first %}
-            '<p class="h4"><a href="{{ site.baseurl }}/item.html?id=' + cb_items[ref].objectid + '">' + cb_items[ref][{{ fields[0].field | jsonify }}]  + '</a></p>' +
+            '<p class="h4"><a href="' + itemHref + '">' + cb_items[ref][{{ fields[0].field | jsonify }}]  + '</a></p>' +
             '<p class="ml-3">';
               {% else %}
               if(cb_items[ref][{{ d.field | jsonify }}]) {
@@ -57,6 +58,10 @@ function createIndex(cb_items) {
 
 /* page init function */
 var  searchPageInit = function (cb_items) {
+  {% unless site.data.theme.browse-child-objects == true %}
+  // filter compound objects
+  var cb_items = cb_items.filter(item => !item.parentid);
+  {% endunless %}
   // set up item store
   for (var item in cb_items) {
     {% for f in index_fields %}
