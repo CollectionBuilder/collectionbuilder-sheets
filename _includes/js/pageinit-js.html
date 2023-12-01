@@ -36,7 +36,7 @@ function cbGetMetadata(metadata_url) {
             loadingIcon.classList.add('d-none');
         },
         error: (err) => {
-            alert("There is an error parsing your CSV! Please check the configured URL or file. The most common issue is incorrect filename, path, or URL so that your CSV is not found.");
+            console.log("There is an error parsing your CSV! Please check the configured URL or file. The most common issue is incorrect filename, path, or URL so that your CSV is not found.");
         }
     });
 }
