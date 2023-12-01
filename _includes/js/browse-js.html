@@ -123,6 +123,7 @@ function filterItems(arr,q) {
       // get browse fields from metadata
       var val = "";
       if(arr[i]["title"]) { val += arr[i]["title"] + " "; }
+      if(arr[i]["format"]) { val += arr[i]["format"] + " "; }
       {% for f in fields  %}
       if(arr[i]["{{ f.field }}"]) { val += arr[i]["{{ f.field }}"] + " "; }
       {% endfor %}
