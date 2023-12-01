@@ -10,7 +10,7 @@
     // set up feature function as variable
     var {{ functionName }} = function (cb_items) { 
         // get formats
-        var item_formats = cb_items.map(obj => { return obj["format"] });
+        var item_formats = cb_items.filter(item => !item.parentid).map(obj => { return obj["format"] });
         // count formats and create button links
         var format_buttons = "";
         var image_count = item_formats.filter(f => { return f.includes("image") }).length;
@@ -29,6 +29,19 @@
         if (pdf_count > 0) {
             format_buttons += pdf_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#pdf">PDFs <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-pdf"/></svg></a><br>';
         }
+        var record_count = item_formats.filter(f => { return f.includes("record") }).length;
+        if (record_count > 0) {
+            format_buttons += record_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#record">Records <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-record"/></svg></a><br>';
+        }
+        var compound_count = item_formats.filter(f => { return f.includes("compound") }).length;
+        if (compound_count > 0) {
+            format_buttons += compound_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#compound_object">Compound Objects <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-compound-object"/></svg></a><br>';
+        }
+        var multiple_count = item_formats.filter(f => { return f.includes("multiple") }).length;
+        if (multiple_count > 0) {
+            format_buttons += multiple_count + ' <a class="text-dark" href="{{ "/browse.html" | relative_url }}#multiple">Multiples <svg class="bi icon-sprite text-body" fill="currentColor" aria-hidden="true"><use xlink:href="{{ '/assets/lib/cb-icons.svg' | relative_url }}#icon-multiple"/></svg></a><br>';
+        }
+
         format_buttons += '<a class="btn btn-sm btn-outline-secondary mt-2" href="{{ "/data.html" | relative_url }}">View table</a>';
 
         // add to page

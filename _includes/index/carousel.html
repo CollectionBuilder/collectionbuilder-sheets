@@ -58,7 +58,11 @@
     // set up feature function variable 
     var {{ functionName }} = function(cb_items) { 
         // filter to items with format image or youtubeid
-        var carouselItems = cb_items.filter(function(item) { return item.youtubeid || item.format.includes("image"); });
+        {% if site.data.theme.carousel-child-objects == true %}
+        var carouselItems = cb_items.filter(item => item.youtubeid || item.format.includes("image"));
+        {% else %}
+        var carouselItems = cb_items.filter(item => !item.parentid && item.youtubeid || item.format.includes("image"));
+        {% endif %}
         
         /* shuffle items */
         carouselItems.sort(function() { return 0.5 - Math.random() });
@@ -84,7 +88,7 @@
                 itemImg = "{{ '/objects/' | relative_url }}" + carouselItems[i]["filename"];
             }
             // calculate item link
-            itemLink = "{{ '/item.html' | relative_url | append: '?id=' }}" + carouselItems[i]["objectid"];
+            itemLink = carouselItems[i]["parentid"] ? "{{ '/item.html' | relative_url | append: '?id=' }}" + carouselItems[i]["parentid"] + "#" + carouselItems[i]["objectid"] : "{{ '/item.html' | relative_url | append: '?id=' }}" + carouselItems[i]["objectid"];
             // create indicator 
             indicator = `<button type="button" data-bs-target="#{{ functionName }}" data-bs-slide-to="${i.toString()}" ${ i == 0 ? 'class="active" aria-current="true" ' : '' }aria-label="Slide ${i.toString()}"></button>`;
             // create slide

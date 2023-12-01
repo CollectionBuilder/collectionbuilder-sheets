@@ -28,7 +28,7 @@
 {%- capture pdf_caption -%}{{ include.caption }}{%- endcapture -%}
 {% else %}
 {%- capture src -%}{% endcapture %}
-{%- capture pdf_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: include.objectid }}{%- endcapture -%}
+{%- capture pdf_link -%}{%- endcapture -%}
 {%- capture pdf_caption -%}{{ include.caption }}{%- endcapture -%}
 {% capture functionName %}pdf_feature_{{ include.objectid | slugify | replace: "-","_" }}{% endcapture %}
 {% endif %}
@@ -65,7 +65,8 @@ var {{ functionName }} = function (cb_items) {
 
         {% unless include.caption or include.caption == false %}
         // add caption
-        document.querySelector("#{{ functionName }}Caption a").innerHTML = record.title;
+        var itemHref = record.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + record.parentid + "#" + record.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + record.objectid;
+        document.querySelector("#{{ functionName }}Caption").innerHTML = `<a href="${ itemHref }">${ record.title}</a>`;
         {% endunless %}
     } else {
         // message if objectid doesn't exist

@@ -28,15 +28,14 @@
             {% if site.tagline %}<p class="mb-0">{{ site.tagline }}</p>{% endif %}
         </div>
         {% unless site.data.theme.featured-image contains '/' %}
-        <div class="position-absolute bottom-0 end-0 px-2 bg-dark bg-opacity-75">
-            <a class="text-white fs-6" href="{{ site.data.theme.featured-image | prepend: '/item.html?id=' | relative_url }}">Featured Image</a>
+        <div id="featured-image-link" class="position-absolute bottom-0 end-0 px-2 bg-dark bg-opacity-75">
         </div>{% endunless %}
     </div>
 </div>
 {% unless site.data.theme.featured-image contains '/' %}
 <script> 
 // set up featured image
-var featuredImage = function (cb_items) {
+var featuredImageInt = function (cb_items) {
     // find item by objectid 
     var featuredItem = cb_items.find(item => item.objectid == "{{ site.data.theme.featured-image }}");
     if (featuredItem) {
@@ -47,15 +46,13 @@ var featuredImage = function (cb_items) {
         } else {
             var bgUrl = "url('{{ '/objects/' | relative_url }}" + featuredItem.filename + "')";
         }
+        var featuredUrl = featuredItem.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + featuredItem.parentid + "#" + featuredItem.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + featuredItem.objectid;
         document.getElementById("home-banner").style.backgroundImage = bgUrl;
+        document.getElementById("featured-image-link").innerHTML = `<a class="text-white fs-6" href="${featuredUrl}">Featured Image</a>`;
     }
 }
 // add feature function to includeFunctions array
-if(includeFunctions) {
-    includeFunctions.push(featuredImage);
-} else {
-    var includeFunctions = [featuredImage];
-}
+includeFunctions.push(featuredImageInt);
 </script>
 {% endunless %}
 {%- else -%}
