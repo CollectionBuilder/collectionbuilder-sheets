@@ -35,6 +35,10 @@
         // featured terms
         var raw_terms = "{{ include.featured }}".split(";");
         {% else %}
+        {% if site.data.theme.browse-child-objects == false %}
+        // filter compound objects
+        var cb_items = cb_items.filter(item => !item.parentid);
+        {% endif %}
         {%- assign cloud-fields = include.field | default: "subject" | split: ";" -%}
         // get cloud fields from metadata
         var raw_terms = [];

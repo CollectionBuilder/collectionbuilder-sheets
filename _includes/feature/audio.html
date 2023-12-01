@@ -23,7 +23,7 @@
 {%- capture src -%}{{ include.objectid | relative_url }}{%- endcapture -%}
 {%- capture audio_link -%}{{ src }}{%- endcapture -%}
 {% else %}
-{%- capture audio_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: include.objectid }}{%- endcapture -%}
+{%- capture audio_link -%}{%- endcapture -%}
 {%- capture src -%}{% endcapture %}
 {% capture functionName %}audio_feature_{{ include.objectid | slugify | replace: "-","_" }}{% endcapture %}
 {% endif %}
@@ -50,9 +50,10 @@ var {{ functionName }} = function (cb_items) {
         }
         // add src
         document.querySelector("#{{ functionName }} audio").innerHTML = `<source src="${audio_src}" >`;
-        {% unless include.caption %}
+        {% unless include.caption or include.caption == false %}
         // add caption
-        document.querySelector("#{{ functionName }} .figure-caption a").innerHTML = record.title;
+        var itemHref = record.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + record.parentid + "#" + record.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + record.objectid;
+        document.querySelector("#{{ functionName }} .figure-caption").innerHTML = `<a href="${ itemHref }">${ record.title}</a>`;
         {% endunless %}
     } else {
         // message if objectid doesn't exist

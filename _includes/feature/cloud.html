@@ -36,6 +36,10 @@
     
     /* create cloud from full metadata */
     var {{ functionName }} = function (cb_items) {
+        {% unless site.data.theme.browse-child-objects == true %}
+        // filter compound objects
+        var cb_items = cb_items.filter(item => !item.parentid);
+        {% endunless %}
         var raw_terms = [];
         // get cloud fields from metadata
         for (var i = 0; i < cb_items.length; i++) {

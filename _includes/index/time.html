@@ -1,7 +1,4 @@
 {% capture functionName %}collection_time_span{% endcapture %}
-{%- assign raw-dates = items | map: 'date' | compact | uniq  -%}
-{%- capture clean-years -%}{% for date in raw-dates %}{% if date contains "-" %}{{ date | strip | split: "-" | first }}{% elsif date contains "/" %}{{ date | strip | split: "/" | last }}{% else %}{{ date | strip }}{% endif %}{% unless forloop.last %};{% endunless %}{%- endfor -%}{%- endcapture -%}
-{%- assign date-range = clean-years | remove: " " | split: ";" | uniq | sort  -%}
 <div class="card mb-3">
     <div class="card-body">
         <h5 class="card-title">Time Span</h5>
@@ -13,6 +10,10 @@
 <script>
     // set up feature function as variable
     var {{ functionName }} = function (cb_items) {
+        {% if site.data.theme.timeline-child-objects == false %}
+        // filter compound objects
+        var cb_items = cb_items.filter(item => !item.parentid);
+        {% endif %}
         // get dates and clean to years
         var item_years = cb_items.map(obj => { 
             var d = obj["date"].trim();

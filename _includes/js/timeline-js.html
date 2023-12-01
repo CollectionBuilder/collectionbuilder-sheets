@@ -6,7 +6,7 @@
 function makeCard(obj) {
     // find images and link
     // find item link
-    var itemHref = `{{ '/item.html' | relative_url }}?id=${obj.objectid}`;
+    var itemHref = obj.parentid ?  "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.parentid + "#" + obj.objectid : "{{ '/item.html' | relative_url | append: '?id=' }}" + obj.objectid;
     // find images
     var thumbSrc;
     // add images or thumb for objects based on format
@@ -24,6 +24,12 @@ function makeCard(obj) {
         thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-video }}.svg';  
     } else if (obj.format.includes("pdf")) {
         thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-pdf }}.svg';
+    } else if (obj.format.includes("record")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-record }}.svg';
+    } else if (obj.format.includes("compound")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-compound-object }}.svg';
+    } else if (obj.format.includes("multiple")) {
+        thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-multiple }}.svg';
     } else {
         thumbSrc = '{{ "/assets/lib/icons/" | relative_url }}{{ icons.icon-default }}.svg';
     }  
@@ -31,16 +37,15 @@ function makeCard(obj) {
     if (obj.youtubeid || obj.format.includes("image")){
         var card = `<div class="col-lg-4 col-md-6">
             <a href="${itemHref}">
-                <img class="lazyload img-thumbnail" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="${thumbSrc}" alt="${obj.title}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${obj.title} | ${obj.date}">
+                <img class="lazyload img-thumbnail timeline-thumb" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="${thumbSrc}" alt="${obj.title}" data-bs-toggle="tooltip" data-bs-placement="bottom" title="${obj.title} | ${obj.date}">
             </a>
             </div>`;
-    }
-    else {
+    } else {
         var card = `<div class="col-lg-4 col-md-6">
             <a href="${itemHref}">
                 <div class="card"> 
                     <div class="card-body text-center">
-                        <h4 class="card-title text-dark">${obj.title}</h4>
+                        <div class="h5 text-dark">${obj.title}</div>
                         <img class="lazyload w-50" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 3 2'%3E%3C/svg%3E" data-src="${thumbSrc}" alt="filetype thumbnail">
                     </div>
                 </div>
@@ -51,6 +56,10 @@ function makeCard(obj) {
 }
 
 var timelinePageInit = function (cb_items) {
+    {% unless site.data.theme.timeline-child-objects == true %}
+    // filter compound objects
+    var cb_items = cb_items.filter(item => !item.parentid);
+    {% endunless %}
     // get dates from metadata and clean to years
     clean_years = [];
     for (var i = 0; i < cb_items.length; i++) {
