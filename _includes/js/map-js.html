@@ -146,7 +146,7 @@ function objectPopups(feature, layer) {
     if (feature.properties.youtubeid) {
         thumbSrc = 'https://img.youtube.com/vi/' +  feature.properties.youtubeid + '/default.jpg';
     } else if (feature.properties.format && feature.properties.format.includes("image")) {
-        if (feature.properties.filename.includes("/")) {
+        if (feature.properties.filename && feature.properties.filename.includes("/")) {
             thumbSrc = feature.properties.filename;
         } else { 
             thumbSrc = "{{ '/objects/' | relative_url }}" + feature.properties.filename;
