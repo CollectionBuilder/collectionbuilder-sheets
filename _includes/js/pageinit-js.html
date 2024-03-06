@@ -67,10 +67,6 @@ function resetMetadata () {
     // reload
     location.reload();
 }
-/* show dev btns if metadata is changed */ 
-if (sessionStorage.getItem("cb_metadata_set")) { 
-    document.getElementById("cbSetUpDevBtns").classList.remove("d-none");
-}
 {% endif %}
 
 /* set base variables */
