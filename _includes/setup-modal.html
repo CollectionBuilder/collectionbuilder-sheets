@@ -49,11 +49,11 @@
                                                 <option value="https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/idaho_cities_cbdemo_urls.csv">Idaho Cities Demo</option>
                                                 <option value="https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/nwpostcards_cbdemo_urls.csv">Northwest Historical Postcards Demo</option>
                                             </select>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-dark" type="submit">
-                                                    Submit
-                                                </button>
-                                            </div>
+                                            
+                                            <button class="btn btn-dark" type="submit">
+                                                Submit
+                                            </button>
+                                            
                                         </div>
                                     </form>
                                 </p>
@@ -73,11 +73,9 @@
                                     <form id="metadataUrl" onsubmit="cbMetadataSelector(this.csvUrl.value); return false;">
                                         <div class="input-group">
                                             <input type="url" name="csvUrl" class="form-control" placeholder="Paste in the full URL to CSV hosted online">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-dark" type="submit">
-                                                    Submit
-                                                </button>
-                                            </div>
+                                            <button class="btn btn-dark" type="submit">
+                                                Submit
+                                            </button>
                                         </div>
                                     </form>
                                 </p>
@@ -97,11 +95,9 @@
                                     <form id="metadataFile" onsubmit="cbMetadataSelector(this.csvFile.files[0]); return false;">
                                         <div class="input-group">
                                             <input type="file" accept=".csv" name="csvFile" class="form-control">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-dark" type="submit">
-                                                    Submit
-                                                </button>
-                                            </div>
+                                            <button class="btn btn-dark" type="submit">
+                                                Submit
+                                            </button>
                                         </div>
                                     </form>
                                 </p>
