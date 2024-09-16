@@ -17,7 +17,9 @@ We suggest editing your CSV using [LibreOffice](https://www.libreoffice.org/) Ca
 
 Describe your items in your copy of the template, following the [guidelines below](#metadata-fields). 
 
-Once you have items added you can [test your metadata]({{ '/setup/' | relative_url }}).
+Once you have items added you can test your metadata using the Config modal:
+
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cbSetUpModal">Change the Metadata!</button>
 
 ----------
 
