@@ -48,15 +48,6 @@ metadata-csv:
 # organization-logo-banner: https://cdil.lib.uidaho.edu/storying-extinction/assets/img/cdil.png
 # organization-logo-nav: https://cdil.lib.uidaho.edu/assets/img/logo.png
 
-
-##########
-# GOOGLE SERVICES [optional!]
-#
-# leave these blank or comment out to NOT include google code. See docs/google.md
-#
-# Add your google-analytics-id to automatically add the embed code
-# google-analytics-id: "G-XXXXXXXXX"
-
 ##########
 # ROBOTS EXCLUDE
 #

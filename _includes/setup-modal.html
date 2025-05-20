@@ -1,5 +1,5 @@
 <!-- dev buttons -->
-<div id="cbSetUpDevBtns" class="d-none position-absolute top-0 end-0 p-3 bg-dark bg-opacity-75">
+<div id="cbSetUpDevBtns" class="position-absolute top-0 end-0 p-3 bg-dark bg-opacity-75">
     <button class="btn btn-sm btn-link text-white" onclick="refreshMetadata()" id="refreshButton">
         <svg class="bi icon-sprite" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16" aria-hidden="true">
             <path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/>
@@ -49,11 +49,11 @@
                                                 <option value="https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/idaho_cities_cbdemo_urls.csv">Idaho Cities Demo</option>
                                                 <option value="https://raw.githubusercontent.com/CollectionBuilder/collectionbuilder-sample-data/main/nwpostcards_cbdemo_urls.csv">Northwest Historical Postcards Demo</option>
                                             </select>
-                                            <div class="input-group-append">
-                                                <button class="btn btn-dark" type="submit">
-                                                    Submit
-                                                </button>
-                                            </div>
+                                            
+                                            <button class="btn btn-dark" type="submit">
+                                                Submit
+                                            </button>
+                                            
                                         </div>
                                     </form>
                                 </p>
@@ -73,11 +73,9 @@
                                     <form id="metadataUrl" onsubmit="cbMetadataSelector(this.csvUrl.value); return false;">
                                         <div class="input-group">
                                             <input type="url" name="csvUrl" class="form-control" placeholder="Paste in the full URL to CSV hosted online">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-dark" type="submit">
-                                                    Submit
-                                                </button>
-                                            </div>
+                                            <button class="btn btn-dark" type="submit">
+                                                Submit
+                                            </button>
                                         </div>
                                     </form>
                                 </p>
@@ -97,11 +95,9 @@
                                     <form id="metadataFile" onsubmit="cbMetadataSelector(this.csvFile.files[0]); return false;">
                                         <div class="input-group">
                                             <input type="file" accept=".csv" name="csvFile" class="form-control">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-dark" type="submit">
-                                                    Submit
-                                                </button>
-                                            </div>
+                                            <button class="btn btn-dark" type="submit">
+                                                Submit
+                                            </button>
                                         </div>
                                     </form>
                                 </p>

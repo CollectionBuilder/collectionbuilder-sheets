@@ -13,6 +13,7 @@
     - "featured" - a manually created list of featured terms, separated by ; semicolon (required if not auto generating from a field)
     - "title" - card title text inside card content area (optional)
     - "header" = card header text in bar above card content (optional)
+    - "heading_level" = customize the level of the heading if necessary for accessibility, choose "h1", "h2", "h3", etc (optional, default "h2")
     - "max" - max number of terms to display if auto generating (optional, default 5)
     - "btn-color" - a bootstrap color class to theme the buttons. Can be any bootstrap template color (e.g. info, success) or outline (e.g. outline-info, outline-success), including colors created in config-theme-colors. (optional, default "info")
     - "stopwords" - list of terms to remove, separated by ";" (optional)
@@ -20,9 +21,9 @@
 {%- endcomment -%}
 {% capture functionName %}featured_terms_{{ include.field | default: include.featured | slugify | replace: "-","_" }}{% endcapture %}
 <div class="card mb-3">
-    {% if include.header %}<h5 class="card-header">{{ include.header }}</h5>{% endif %}
+    {% if include.header %}<{{ include.heading_level | default: 'h2' | strip }} class="card-header h5">{{ include.header }}</{{ include.heading_level | default: 'h2' | strip }}>{% endif %}
     <div class="card-body">
-        {% if include.title %}<h5 class="card-title">{{ include.title }}</h5>{% endif %}
+        {% if include.title %}<{{ include.heading_level | default: 'h2' | strip }} class="card-title h5">{{ include.title }}</{{ include.heading_level | default: 'h2' | strip }}>{% endif %}
         <p class="card-text">
             <div id="{{ functionName }}"></div>
         </p>

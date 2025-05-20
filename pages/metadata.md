@@ -9,7 +9,7 @@ permalink: /metadata.html
 CollectionBuilder-Sheets loads and parses a metadata CSV directly to create your digital collection pages.
 To create metadata compatible with this CollectionBuilder-Sheets instance the best way to get started is to make of copy of our template in Google Drive:
 
-[CollectionBuilder Metadata Template](https://docs.google.com/spreadsheets/d/1Uv9ytll0hysMOH1j-VL1lZx6PWvc1zf3L35sK_4IuzI/copy?usp=sharing){:.btn .btn-outline-success target="_blank" rel="noopener"}
+[CollectionBuilder Metadata Template](https://docs.google.com/spreadsheets/d/1Uv9ytll0hysMOH1j-VL1lZx6PWvc1zf3L35sK_4IuzI/copy?usp=sharing){:.btn .btn-outline-success}
 {:.text-center}
 
 Alternatively, you can [download the template CSV]({{ '/assets/metadata-template.csv' | relative_url }}) and work on your local machine.
@@ -17,7 +17,9 @@ We suggest editing your CSV using [LibreOffice](https://www.libreoffice.org/) Ca
 
 Describe your items in your copy of the template, following the [guidelines below](#metadata-fields). 
 
-Once you have items added you can [test your metadata]({{ '/setup/' | relative_url }}).
+Once you have items added you can test your metadata using the Config modal:
+
+<button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#cbSetUpModal">Change the Metadata!</button>
 
 ----------
 
@@ -141,7 +143,7 @@ For creating your own project (where you can customize the metadata however you 
 
 ### type
 
-- The genre of the object, chosen from the [DCMI Type Vocabulary](https://www.dublincore.org/specifications/dublin-core/dcmi-type-vocabulary/2003-02-12/){:target="_blank" rel="noopener"}.
+- The genre of the object, chosen from the [DCMI Type Vocabulary](https://www.dublincore.org/specifications/dublin-core/dcmi-type-vocabulary/2003-02-12/).
 - Choose from: 
     - `Image;StillImage` (photographs, etc)
     - `Image;MovingImage` (films)
@@ -151,7 +153,7 @@ For creating your own project (where you can customize the metadata however you 
 ### format
 
 - *required*
-- This field indicates the item's digital media type using the [MIME type](https://www.iana.org/assignments/media-types/media-types.xhtml){:target="_blank" rel="noopener"} standards.
+- This field indicates the item's digital media type using the [MIME type](https://www.iana.org/assignments/media-types/media-types.xhtml) standards.
 - It is important to get this correct, or the item won't be displayed correctly. 
 - Choose from:
     - Image: `image/jpeg`
@@ -166,5 +168,5 @@ For creating your own project (where you can customize the metadata however you 
 
 ### rightsstatement
 
-- This field is a standardized rights statement, designated in the form of a URI. It should be presented as a [creativecommons.org](https://creativecommons.org/){:target="_blank" rel="noopener"} URI or a [rightsstatements.org](https://rightsstatements.org/en/){:target="_blank" rel="noopener"} URI. 
+- This field is a standardized rights statement, designated in the form of a URI. It should be presented as a [creativecommons.org](https://creativecommons.org/) URI or a [rightsstatements.org](https://rightsstatements.org/en/) URI. 
 - This helps users understand how they can use the digital objects, and libraries / project creators do their due diligence to represent intellectual property.
