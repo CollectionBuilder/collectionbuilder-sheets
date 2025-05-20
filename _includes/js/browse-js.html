@@ -4,14 +4,6 @@
 {%- assign fields = site.data.config-browse -%}
 <script>
 
-/* set some elements */ 
-var loadingIcon = document.querySelector("#loadingIcon");
-var filterTextBox = document.querySelector('#filterTextBox');
-var filterButton = document.querySelector("#filterButton");
-var browseItemsDiv = document.querySelector("#browseItems");
-var query = "";
-var browse_items;
-
 /* function to make each item card on page */
 function makeCard(obj) {
     // find item link
@@ -96,18 +88,6 @@ function makeCard(obj) {
     return card;
 }
 
-/* Fisher-Yates shuffle https://bost.ocks.org/mike/shuffle/ */
-function shuffle(array) {
-  var m = array.length, t, i;
-  while (m) {
-  i = Math.floor(Math.random() * m--);
-  t = array[m];
-  array[m] = array[i];
-  array[i] = t;
-  }
-  return array;
-}
-
 /* function to filter items to be displayed on browse */
 function filterItems(arr,q) {
   // show loading icon
@@ -144,9 +124,33 @@ function filterItems(arr,q) {
   browseItemsDiv.innerHTML = cards;
 
   // finish
-  filterButton.focus();
+  if (q != "") {
+      filterTextBox.focus();
+  }
   loadingIcon.classList.add("d-none");
 };
+
+/* Fisher-Yates shuffle https://bost.ocks.org/mike/shuffle/ */
+function shuffle(array) {
+  var m = array.length, t, i;
+  while (m) {
+  i = Math.floor(Math.random() * m--);
+  t = array[m];
+  array[m] = array[i];
+  array[i] = t;
+  }
+  return array;
+}
+
+/* init browse page */
+
+/* set some elements */ 
+var loadingIcon = document.querySelector("#loadingIcon");
+var filterTextBox = document.querySelector('#filterTextBox');
+var filterButton = document.querySelector("#filterButton");
+var browseItemsDiv = document.querySelector("#browseItems");
+var query = "";
+var browse_items;
 
 /* function to init browse after loading items */ 
 var browsePageInit = function (cb_items) {
@@ -158,12 +162,17 @@ var browsePageInit = function (cb_items) {
   shuffle(cb_items);
   /* filter if hash in initial URL */
   if(window.location.hash) {
-    query = decodeURIComponent(location.hash.substr(1));
-    filterTextBox.value = query;
-    filterItems(cb_items,query);
+      var hashValue = decodeURIComponent(location.hash.substr(1));
+      if (hashValue != 'maincontent') { 
+          query = hashValue;
+      } else {
+          query = "";
+      }
+      filterTextBox.value = query;
+      filterItems(cb_items,query);
   } else {
-    query = "";
-    filterItems(cb_items,query);
+      query = "";
+      filterItems(cb_items,query);
   }
 }
 
@@ -185,10 +194,13 @@ function resetFilter() {
 /* filter if hash changes */ 
 window.addEventListener("hashchange", function() {
     // read hash
-    query = decodeURIComponent(location.hash.substr(1));
-    filterTextBox.value = query;
-    // filter
-    filterItems(cb_items,query);
+    var hashValue = decodeURIComponent(location.hash.substr(1));
+    if (hashValue != 'maincontent') { 
+        query = hashValue;
+        filterTextBox.value = query;
+        // filter
+        filterItems(cb_items,query);
+    }
 });
 
 /* item array sorting function */
