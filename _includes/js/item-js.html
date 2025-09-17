@@ -6,6 +6,9 @@
 <script>
 /* function to find links to objects from filename field */ 
 function findFileLink(record) {
+    if (!record.filename) {
+        return "";
+    }
     var fileLink = record.filename.includes('/') ? record.filename : "{{ '/objects/' | relative_url }}" + record.filename;
     return fileLink;
 }
