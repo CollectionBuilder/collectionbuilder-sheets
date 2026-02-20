@@ -28,10 +28,10 @@
     {% for i in figures %}
     {% if i contains "/" %}
         {%- capture image_src -%}{{ i | relative_url }}{%- endcapture -%}
-        {%- capture item_caption -%}{{ captions[forloop.index0] | default: src }}{%- endcapture -%}
+        {%- capture image_caption -%}{{ captions[forloop.index0] }}{%- endcapture -%}
         {%- capture image_alt -%}{{ alts[forloop.index0] }}{%- endcapture -%}
-    {%- capture image_link -%}{{ links[forloop.index0] | default: image_src }}{%- endcapture -%}
-    {% capture functionName %}{% endcapture %}
+        {%- capture image_link -%}{{ links[forloop.index0] | default: image_src }}{%- endcapture -%}
+        {% capture functionName %}{% endcapture %}
     {% else %}
         {%- capture image_link -%}{{ '/item.html' | relative_url | append: '?id=' | append: i }}{% endcapture %}
         {% if captions %}{%- capture image_caption -%}{{ captions[forloop.index0] }}{%- endcapture -%}{% endif %}
