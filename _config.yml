@@ -63,6 +63,9 @@ metadata-csv:
 #
 # dev mode turns on ability to change metadata
 development-mode: true
+# Library directory location. This allows you to customize where the standard assets are found.
+# provide a relative path in this repository or full url 
+lib-assets: /assets/lib
 # ignore stuff
 exclude: [docs/, Rakefile, README.md, LICENSE]
 # compress CSS output

@@ -11,6 +11,8 @@ To learn more check [docs/sheets-metadata.md](docs/sheets-metadata.md) or visit 
 
 Note that CB-Sheets is based on and mostly compatible with [CollectionBuilder-GH](https://github.com/CollectionBuilder/collectionbuilder-gh), but handles the metadata parsing in a fundamentally different way. 
 
+If developing CB-Sheets on your local machine, use Ruby 3.4.x (Ruby 4 does not work with the `github-pages` gem) or check the "Gemfile" comments for options.
+
 ----------
 
 ## CollectionBuilder 
