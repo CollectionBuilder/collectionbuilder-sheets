@@ -51,7 +51,7 @@ function createIndex(cb_items) {
 
 /* page init function */
 var  searchPageInit = function (cb_items) {
-  {% unless site.data.theme.browse-child-objects == true %}
+  {% unless site.data.theme.search-child-objects == true %}
   // filter compound objects
   var cb_items = cb_items.filter(item => !item.parentid);
   {% endunless %}
